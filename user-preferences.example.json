@@ -1,0 +1,12 @@
+{
+  "daysTarget": 4,
+  "milesPerDayTarget": 10,
+  "elevationTolerance": "moderate",
+  "sceneryPreferences": ["lakes", "peaks"],
+  "crowdPreference": "mixed",
+  "experienceLevel": "intermediate",
+  "groupType": "couple",
+  "avoid": "long stretches without water",
+  "priorities": "alpine lakes and named peaks, variety of terrain each day",
+  "notes": "July trip, willing to drive from Bishop, no permits if possible"
+}

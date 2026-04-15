@@ -1,0 +1,134 @@
+[
+  {
+    "attempt": 1,
+    "responseLength": 10275,
+    "validation": {
+      "ok": false,
+      "errors": [
+        {
+          "route": "classic",
+          "check": "note-elev-accuracy",
+          "msg": "[classic] Day 2 note claims 10500 ft but day gain is 2859 ft, loss is 1192 ft (tolerance ±100)"
+        },
+        {
+          "route": "classic",
+          "check": "note-mile-accuracy",
+          "msg": "[classic] Day 4 note claims 14.7 mi but day is actually 12 mi (tolerance ±0.5)"
+        },
+        {
+          "route": "classic",
+          "check": "note-length",
+          "msg": "[classic] Day 4 note too long (81 words): \"Day 4 is your long day-14.7 miles with 3,600 ft of...\""
+        },
+        {
+          "route": "scenic",
+          "check": "mile-sum",
+          "msg": "[scenic] Day miles sum to 32.8, expected 39.4 (±0.3)"
+        },
+        {
+          "route": "scenic",
+          "check": "elevation-gain-sum",
+          "msg": "[scenic] Day gain sums to 8594 ft, expected 10860 ft (±50)"
+        },
+        {
+          "route": "scenic",
+          "check": "elevation-loss-sum",
+          "msg": "[scenic] Day loss sums to 8767 ft, expected 10902 ft (±50)"
+        },
+        {
+          "route": "scenic",
+          "check": "day-balance",
+          "msg": "[scenic] Day 4 is 0.9 mi, below 30% of 10 mi target (min 3.0 mi). Redistribute segments for better day balance."
+        },
+        {
+          "route": "scenic",
+          "check": "note-mile-accuracy",
+          "msg": "[scenic] Day 3 note claims 19 mi but day is actually 19.6 mi (tolerance ±0.5)"
+        },
+        {
+          "route": "scenic",
+          "check": "note-mile-accuracy",
+          "msg": "[scenic] Day 3 note claims 15.7 mi but day is actually 19.6 mi (tolerance ±0.5)"
+        },
+        {
+          "route": "scenic",
+          "check": "note-elev-accuracy",
+          "msg": "[scenic] Day 3 note claims 1570 ft but day gain is 5734 ft, loss is 4551 ft (tolerance ±100)"
+        },
+        {
+          "route": "scenic",
+          "check": "note-length",
+          "msg": "[scenic] Day 3 note too long (81 words): \"Day 3 is your long day-19.0 miles with 5,800 ft of...\""
+        },
+        {
+          "route": "explorer",
+          "check": "note-mile-accuracy",
+          "msg": "[explorer] Day 2 note claims 12.7 mi but day is actually 4.5 mi (tolerance ±0.5)"
+        },
+        {
+          "route": "explorer",
+          "check": "note-elev-accuracy",
+          "msg": "[explorer] Day 2 note claims 4405 ft but day gain is 2834 ft, loss is 2834 ft (tolerance ±100)"
+        },
+        {
+          "route": "explorer",
+          "check": "note-elev-accuracy",
+          "msg": "[explorer] Day 3 note claims 2203 ft but day gain is 3774 ft, loss is 3774 ft (tolerance ±100)"
+        },
+        {
+          "route": "explorer",
+          "check": "note-elev-accuracy",
+          "msg": "[explorer] Day 3 note claims 2203 ft but day gain is 3774 ft, loss is 3774 ft (tolerance ±100)"
+        },
+        {
+          "route": "explorer",
+          "check": "note-elev-accuracy",
+          "msg": "[explorer] Day 3 note claims 4405 ft but day gain is 3774 ft, loss is 3774 ft (tolerance ±100)"
+        }
+      ]
+    },
+    "correctionPrompt": "Your previous output had 16 validation errors:\n\n- [note-elev-accuracy] [classic] Day 2 note claims 10500 ft but day gain is 2859 ft, loss is 1192 ft (tolerance ±100)\n- [note-mile-accuracy] [classic] Day 4 note claims 14.7 mi but day is actually 12 mi (tolerance ±0.5)\n- [note-length] [classic] Day 4 note too long (81 words): \"Day 4 is your long day-14.7 miles with 3,600 ft of...\"\n- [mile-sum] [scenic] Day miles sum to 32.8, expected 39.4 (±0.3)\n- [elevation-gain-sum] [scenic] Day gain sums to 8594 ft, expected 10860 ft (±50)\n- [elevation-loss-sum] [scenic] Day loss sums to 8767 ft, expected 10902 ft (±50)\n- [day-balance] [scenic] Day 4 is 0.9 mi, below 30% of 10 mi target (min 3.0 mi). Redistribute segments for better day balance.\n- [note-mile-accuracy] [scenic] Day 3 note claims 19 mi but day is actually 19.6 mi (tolerance ±0.5)\n- [note-mile-accuracy] [scenic] Day 3 note claims 15.7 mi but day is actually 19.6 mi (tolerance ±0.5)\n- [note-elev-accuracy] [scenic] Day 3 note claims 1570 ft but day gain is 5734 ft, loss is 4551 ft (tolerance ±100)\n- [note-length] [scenic] Day 3 note too long (81 words): \"Day 3 is your long day-19.0 miles with 5,800 ft of...\"\n- [note-mile-accuracy] [explorer] Day 2 note claims 12.7 mi but day is actually 4.5 mi (tolerance ±0.5)\n- [note-elev-accuracy] [explorer] Day 2 note claims 4405 ft but day gain is 2834 ft, loss is 2834 ft (tolerance ±100)\n- [note-elev-accuracy] [explorer] Day 3 note claims 2203 ft but day gain is 3774 ft, loss is 3774 ft (tolerance ±100)\n- [note-elev-accuracy] [explorer] Day 3 note claims 2203 ft but day gain is 3774 ft, loss is 3774 ft (tolerance ±100)\n- [note-elev-accuracy] [explorer] Day 3 note claims 4405 ft but day gain is 3774 ft, loss is 3774 ft (tolerance ±100)\n\nPlease fix these specific issues and output the corrected JSON array. Remember:\n- Use FULL trail names (never \"JMT\" or \"PCT\")\n- Use plain ASCII hyphens only (never en-dash or em-dash)\n- Every segment index for a route must appear in exactly one day\n- Day notes must be 20-80 words each\n- Each pro and con must be 1-2 sentences max\n- Output ONLY the JSON array, no markdown fences or explanation text"
+  },
+  {
+    "attempt": 2,
+    "responseLength": 10397,
+    "validation": {
+      "ok": false,
+      "errors": [
+        {
+          "route": "classic",
+          "check": "note-mile-accuracy",
+          "msg": "[classic] Day 4 note claims 12 mi but day is actually 8.4 mi (tolerance ±0.5)"
+        },
+        {
+          "route": "scenic",
+          "check": "day-balance",
+          "msg": "[scenic] Day 4 is 0.9 mi, below 30% of 10 mi target (min 3.0 mi). Redistribute segments for better day balance."
+        },
+        {
+          "route": "scenic",
+          "check": "note-mile-accuracy",
+          "msg": "[scenic] Day 3 note claims 19.6 mi but day is actually 26.2 mi (tolerance ±0.5)"
+        },
+        {
+          "route": "scenic",
+          "check": "note-mile-accuracy",
+          "msg": "[scenic] Day 3 note claims 15.7 mi but day is actually 26.2 mi (tolerance ±0.5)"
+        },
+        {
+          "route": "explorer",
+          "check": "note-mile-accuracy",
+          "msg": "[explorer] Day 4 note claims 15.3 mi but day is actually 11.5 mi (tolerance ±0.5)"
+        }
+      ]
+    },
+    "correctionPrompt": "Your previous output had 5 validation errors:\n\n- [note-mile-accuracy] [classic] Day 4 note claims 12 mi but day is actually 8.4 mi (tolerance ±0.5)\n- [day-balance] [scenic] Day 4 is 0.9 mi, below 30% of 10 mi target (min 3.0 mi). Redistribute segments for better day balance.\n- [note-mile-accuracy] [scenic] Day 3 note claims 19.6 mi but day is actually 26.2 mi (tolerance ±0.5)\n- [note-mile-accuracy] [scenic] Day 3 note claims 15.7 mi but day is actually 26.2 mi (tolerance ±0.5)\n- [note-mile-accuracy] [explorer] Day 4 note claims 15.3 mi but day is actually 11.5 mi (tolerance ±0.5)\n\nPlease fix these specific issues and output the corrected JSON array. Remember:\n- Use FULL trail names (never \"JMT\" or \"PCT\")\n- Use plain ASCII hyphens only (never en-dash or em-dash)\n- Every segment index for a route must appear in exactly one day\n- Day notes must be 20-80 words each\n- Each pro and con must be 1-2 sentences max\n- Output ONLY the JSON array, no markdown fences or explanation text"
+  },
+  {
+    "attempt": 3,
+    "responseLength": 10056,
+    "validation": {
+      "ok": true
+    }
+  }
+]

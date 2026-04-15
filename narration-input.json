@@ -1,0 +1,2788 @@
+{
+  "userPreferences": {
+    "days": 4,
+    "milesPerDay": "~10",
+    "elevationTolerance": "moderate",
+    "experienceLevel": "intermediate",
+    "groupType": "couple",
+    "sceneryPreferences": [
+      "lakes",
+      "peaks"
+    ],
+    "crowdPreference": "mixed",
+    "avoid": "long stretches without water",
+    "priorities": "alpine lakes and named peaks, variety of terrain each day",
+    "notes": "July trip, willing to drive from Bishop, no permits if possible"
+  },
+  "candidateRoutes": {
+    "classic": {
+      "clusterSize": 1789,
+      "totalMiles": 37.5,
+      "totalGainFt": 11707,
+      "totalLossFt": 11705,
+      "distinctTrailCount": 10,
+      "distinctFeatureCount": 25,
+      "htRatio": 29,
+      "geoCenter": {
+        "lat": 37.69131368235295,
+        "lon": -119.14575920588237
+      },
+      "trailheads": [
+        "jct (River Trail / Clark Lakes Trail)"
+      ],
+      "allFeatures": [
+        {
+          "name": "Altha Lake",
+          "type": "lake"
+        },
+        {
+          "name": "Badger Lakes",
+          "type": "water"
+        },
+        {
+          "name": "Billy Lake",
+          "type": "water"
+        },
+        {
+          "name": "Clarice Lake",
+          "type": "water"
+        },
+        {
+          "name": "Clark Lakes",
+          "type": "water"
+        },
+        {
+          "name": "Clyde Minaret",
+          "type": "peak"
+        },
+        {
+          "name": "Ediza Lake",
+          "type": "water"
+        },
+        {
+          "name": "Emily Lake",
+          "type": "water"
+        },
+        {
+          "name": "Gem Lake",
+          "type": "lake"
+        },
+        {
+          "name": "Gladys Lake",
+          "type": "lake"
+        },
+        {
+          "name": "Iceberg Lake",
+          "type": "lake"
+        },
+        {
+          "name": "Johnston Lake",
+          "type": "water"
+        },
+        {
+          "name": "Leonard Minaret",
+          "type": "peak"
+        },
+        {
+          "name": "Middle Fork San Joaquin River",
+          "type": "river"
+        },
+        {
+          "name": "Minaret Creek",
+          "type": "stream"
+        },
+        {
+          "name": "Minaret Mine",
+          "type": "feature"
+        },
+        {
+          "name": "Minaret Mine",
+          "type": "feature"
+        },
+        {
+          "name": "Olaine Lake",
+          "type": "water"
+        },
+        {
+          "name": "Red Top Mountain",
+          "type": "peak"
+        },
+        {
+          "name": "Riegelhuth Minaret",
+          "type": "peak"
+        },
+        {
+          "name": "Rosalie Lake",
+          "type": "lake"
+        },
+        {
+          "name": "Rush Creek",
+          "type": "stream"
+        },
+        {
+          "name": "Shadow Creek",
+          "type": "stream"
+        },
+        {
+          "name": "Shadow Lake",
+          "type": "lake"
+        },
+        {
+          "name": "Summit Lake",
+          "type": "water"
+        }
+      ],
+      "segments": [
+        {
+          "segIdx": 0,
+          "trailName": "River Trail",
+          "lengthMi": 2.405,
+          "gainFt": 872,
+          "lossFt": 1633,
+          "fromJunction": "jct (River Trail / Clark Lakes Trail)",
+          "toJunction": "jct (River Trail / Shadow Creek Trail)",
+          "midpoint": {
+            "lat": 37.7063972,
+            "lon": -119.1250854
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Olaine Lake"
+          ],
+          "streams": [
+            "Middle Fork San Joaquin River"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 1,
+          "trailName": "Shadow Creek Trail",
+          "lengthMi": 0.945,
+          "gainFt": 63,
+          "lossFt": 152,
+          "fromJunction": "jct (River Trail / Shadow Creek Trail)",
+          "toJunction": "jct (Shadow Creek Trail / River Trail)",
+          "midpoint": {
+            "lat": 37.6911147,
+            "lon": -119.1105922
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Olaine Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 2,
+          "trailName": "Shadow Creek Trail",
+          "lengthMi": 0.945,
+          "gainFt": 152,
+          "lossFt": 63,
+          "fromJunction": "jct (Shadow Creek Trail / River Trail)",
+          "toJunction": "jct (River Trail / Shadow Creek Trail)",
+          "midpoint": {
+            "lat": 37.6911147,
+            "lon": -119.1105922
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Olaine Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 3,
+          "trailName": "Shadow Creek Trail",
+          "lengthMi": 0.202,
+          "gainFt": 0,
+          "lossFt": 0,
+          "fromJunction": "jct (River Trail / Shadow Creek Trail)",
+          "toJunction": "jct (Shadow Creek Trail)",
+          "midpoint": {
+            "lat": 37.6974403,
+            "lon": -119.1188021
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Olaine Lake"
+          ],
+          "streams": [
+            "Middle Fork San Joaquin River"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 4,
+          "trailName": "Shadow Creek Trail",
+          "lengthMi": 1.583,
+          "gainFt": 1072,
+          "lossFt": 419,
+          "fromJunction": "jct (Shadow Creek Trail)",
+          "toJunction": "jct (Shadow Creek Trail / John Muir Trail)",
+          "midpoint": {
+            "lat": 37.6980438,
+            "lon": -119.1231667
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Shadow Lake"
+          ],
+          "streams": [
+            "Shadow Creek",
+            "Middle Fork San Joaquin River"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 5,
+          "trailName": "John Muir Trail",
+          "lengthMi": 0.018,
+          "gainFt": 0,
+          "lossFt": 0,
+          "fromJunction": "jct (Shadow Creek Trail / John Muir Trail)",
+          "toJunction": "jct (John Muir Trail)",
+          "midpoint": {
+            "lat": 37.6932148,
+            "lon": -119.1366488
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Shadow Lake"
+          ],
+          "streams": [
+            "Shadow Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 6,
+          "trailName": "John Muir Trail",
+          "lengthMi": 4.056,
+          "gainFt": 1472,
+          "lossFt": 1012,
+          "fromJunction": "jct (John Muir Trail)",
+          "toJunction": "jct (John Muir Trail / Emily Lake Trail)",
+          "midpoint": {
+            "lat": 37.6850642,
+            "lon": -119.120467
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Shadow Lake",
+            "Rosalie Lake",
+            "Gladys Lake",
+            "Emily Lake"
+          ],
+          "streams": [
+            "Shadow Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 7,
+          "trailName": "John Muir Trail",
+          "lengthMi": 2.225,
+          "gainFt": 205,
+          "lossFt": 1301,
+          "fromJunction": "jct (John Muir Trail / Emily Lake Trail)",
+          "toJunction": "jct (John Muir Trail / Minaret Creek Trail)",
+          "midpoint": {
+            "lat": 37.656938,
+            "lon": -119.0981162
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Johnston Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 8,
+          "trailName": "John Muir Trail",
+          "lengthMi": 0.313,
+          "gainFt": 20,
+          "lossFt": 59,
+          "fromJunction": "jct (John Muir Trail / Minaret Creek Trail)",
+          "toJunction": "jct (John Muir Trail / Minaret Creek Alternate Crossing)",
+          "midpoint": {
+            "lat": 37.6450924,
+            "lon": -119.098312
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Johnston Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 9,
+          "trailName": "John Muir Trail",
+          "lengthMi": 0.313,
+          "gainFt": 59,
+          "lossFt": 20,
+          "fromJunction": "jct (John Muir Trail / Minaret Creek Alternate Crossing)",
+          "toJunction": "jct (John Muir Trail / Minaret Creek Trail)",
+          "midpoint": {
+            "lat": 37.6450924,
+            "lon": -119.098312
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Johnston Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 10,
+          "trailName": "Minaret Creek Trail",
+          "lengthMi": 2.745,
+          "gainFt": 1258,
+          "lossFt": 297,
+          "fromJunction": "jct (John Muir Trail / Minaret Creek Trail)",
+          "toJunction": "jct (Minaret Mine Trail / Minaret Creek Trail)",
+          "midpoint": {
+            "lat": 37.6510515,
+            "lon": -119.1180611
+          },
+          "peaks": [
+            "Red Top Mountain"
+          ],
+          "passes": [],
+          "lakes": [
+            "Johnston Lake"
+          ],
+          "streams": [
+            "Minaret Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 11,
+          "trailName": "Minaret Mine Trail",
+          "lengthMi": 1.732,
+          "gainFt": 692,
+          "lossFt": 0,
+          "fromJunction": "jct (Minaret Mine Trail / Minaret Creek Trail)",
+          "toJunction": "jct (Minaret Mine Trail)",
+          "midpoint": {
+            "lat": 37.6614894,
+            "lon": -119.1350688
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [],
+          "springs": [],
+          "landmarks": [
+            "Minaret Mine"
+          ]
+        },
+        {
+          "segIdx": 12,
+          "trailName": "Minaret Mine Trail",
+          "lengthMi": 1.732,
+          "gainFt": 0,
+          "lossFt": 692,
+          "fromJunction": "jct (Minaret Mine Trail)",
+          "toJunction": "jct (Minaret Mine Trail / Minaret Creek Trail)",
+          "midpoint": {
+            "lat": 37.6614894,
+            "lon": -119.1350688
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [],
+          "springs": [],
+          "landmarks": [
+            "Minaret Mine"
+          ]
+        },
+        {
+          "segIdx": 13,
+          "trailName": "Minaret Creek Trail",
+          "lengthMi": 2.189,
+          "gainFt": 909,
+          "lossFt": 203,
+          "fromJunction": "jct (Minaret Mine Trail / Minaret Creek Trail)",
+          "toJunction": "jct (Cecile Lake Trail / Minaret Creek Trail)",
+          "midpoint": {
+            "lat": 37.6570441,
+            "lon": -119.151122
+          },
+          "peaks": [
+            "Riegelhuth Minaret"
+          ],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "Minaret Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 14,
+          "trailName": "Cecile Lake Trail",
+          "lengthMi": 0.147,
+          "gainFt": 135,
+          "lossFt": 0,
+          "fromJunction": "jct (Cecile Lake Trail / Minaret Creek Trail)",
+          "toJunction": "jct (Cecile Lake Trail)",
+          "midpoint": {
+            "lat": 37.6611964,
+            "lon": -119.1601006
+          },
+          "peaks": [
+            "Riegelhuth Minaret"
+          ],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "Minaret Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 15,
+          "trailName": "Cecile Lake Trail",
+          "lengthMi": 0.218,
+          "gainFt": 354,
+          "lossFt": 20,
+          "fromJunction": "jct (Cecile Lake Trail)",
+          "toJunction": "jct (Cecile Lake Trail)",
+          "midpoint": {
+            "lat": 37.6620136,
+            "lon": -119.1620495
+          },
+          "peaks": [
+            "Riegelhuth Minaret"
+          ],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "Minaret Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 16,
+          "trailName": "Cecile Lake Trail",
+          "lengthMi": 0.441,
+          "gainFt": 41,
+          "lossFt": 97,
+          "fromJunction": "jct (Cecile Lake Trail)",
+          "toJunction": "jct (Cecile Lake Trail / Shadow Creek Trail)",
+          "midpoint": {
+            "lat": 37.6661596,
+            "lon": -119.1655979
+          },
+          "peaks": [
+            "Clyde Minaret"
+          ],
+          "passes": [],
+          "lakes": [
+            "Iceberg Lake"
+          ],
+          "streams": [
+            "Shadow Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 17,
+          "trailName": "Shadow Creek Trail",
+          "lengthMi": 0.127,
+          "gainFt": 0,
+          "lossFt": 213,
+          "fromJunction": "jct (Cecile Lake Trail / Shadow Creek Trail)",
+          "toJunction": "jct (Shadow Creek Trail)",
+          "midpoint": {
+            "lat": 37.6668029,
+            "lon": -119.1685885
+          },
+          "peaks": [
+            "Clyde Minaret"
+          ],
+          "passes": [],
+          "lakes": [
+            "Iceberg Lake"
+          ],
+          "streams": [
+            "Shadow Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 18,
+          "trailName": "Shadow Creek Trail",
+          "lengthMi": 0.1,
+          "gainFt": 0,
+          "lossFt": 302,
+          "fromJunction": "jct (Shadow Creek Trail)",
+          "toJunction": "jct (Shadow Creek Trail)",
+          "midpoint": {
+            "lat": 37.6684377,
+            "lon": -119.1672635
+          },
+          "peaks": [
+            "Clyde Minaret"
+          ],
+          "passes": [],
+          "lakes": [
+            "Iceberg Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 19,
+          "trailName": "Shadow Creek Trail",
+          "lengthMi": 0.271,
+          "gainFt": 512,
+          "lossFt": 476,
+          "fromJunction": "jct (Shadow Creek Trail)",
+          "toJunction": "jct (Shadow Creek Trail)",
+          "midpoint": {
+            "lat": 37.6715245,
+            "lon": -119.1666578
+          },
+          "peaks": [
+            "Clyde Minaret"
+          ],
+          "passes": [],
+          "lakes": [
+            "Iceberg Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 20,
+          "trailName": "Shadow Creek Trail",
+          "lengthMi": 0.128,
+          "gainFt": 0,
+          "lossFt": 0,
+          "fromJunction": "jct (Shadow Creek Trail)",
+          "toJunction": "jct (Shadow Creek Trail)",
+          "midpoint": {
+            "lat": 37.6732963,
+            "lon": -119.1679931
+          },
+          "peaks": [
+            "Leonard Minaret"
+          ],
+          "passes": [],
+          "lakes": [
+            "Iceberg Lake"
+          ],
+          "streams": [
+            "Shadow Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 21,
+          "trailName": "Shadow Creek Trail",
+          "lengthMi": 0.833,
+          "gainFt": 46,
+          "lossFt": 561,
+          "fromJunction": "jct (Shadow Creek Trail)",
+          "toJunction": "jct (Shadow Creek Trail / Ediza Lake Spur Trail)",
+          "midpoint": {
+            "lat": 37.6807077,
+            "lon": -119.1652362
+          },
+          "peaks": [
+            "Leonard Minaret"
+          ],
+          "passes": [],
+          "lakes": [
+            "Ediza Lake",
+            "Iceberg Lake"
+          ],
+          "streams": [
+            "Shadow Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 22,
+          "trailName": "Shadow Creek Trail",
+          "lengthMi": 0.534,
+          "gainFt": 240,
+          "lossFt": 223,
+          "fromJunction": "jct (Shadow Creek Trail / Ediza Lake Spur Trail)",
+          "toJunction": "jct (Shadow Creek Trail)",
+          "midpoint": {
+            "lat": 37.6871688,
+            "lon": -119.1641897
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Ediza Lake"
+          ],
+          "streams": [
+            "Shadow Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 23,
+          "trailName": "Shadow Creek Trail",
+          "lengthMi": 0.189,
+          "gainFt": 0,
+          "lossFt": 85,
+          "fromJunction": "jct (Shadow Creek Trail)",
+          "toJunction": "jct (Cabin Lake Trail / Shadow Creek Trail)",
+          "midpoint": {
+            "lat": 37.6881718,
+            "lon": -119.1610246
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Ediza Lake"
+          ],
+          "streams": [
+            "Shadow Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 24,
+          "trailName": "Shadow Creek Trail",
+          "lengthMi": 0.192,
+          "gainFt": 0,
+          "lossFt": 0,
+          "fromJunction": "jct (Cabin Lake Trail / Shadow Creek Trail)",
+          "toJunction": "jct (Nydiver Lakes Trail / Shadow Creek Trail)",
+          "midpoint": {
+            "lat": 37.6894664,
+            "lon": -119.1585329
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "Shadow Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 25,
+          "trailName": "Shadow Creek Trail",
+          "lengthMi": 0.946,
+          "gainFt": 0,
+          "lossFt": 207,
+          "fromJunction": "jct (Nydiver Lakes Trail / Shadow Creek Trail)",
+          "toJunction": "jct (John Muir Trail / Shadow Creek Trail)",
+          "midpoint": {
+            "lat": 37.6912734,
+            "lon": -119.1501067
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "Shadow Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 26,
+          "trailName": "John Muir Trail",
+          "lengthMi": 1.142,
+          "gainFt": 644,
+          "lossFt": 30,
+          "fromJunction": "jct (John Muir Trail / Shadow Creek Trail)",
+          "toJunction": "jct (John Muir Trail / Laura Lake Trail)",
+          "midpoint": {
+            "lat": 37.6955218,
+            "lon": -119.1486101
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "Shadow Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 27,
+          "trailName": "John Muir Trail",
+          "lengthMi": 1.81,
+          "gainFt": 929,
+          "lossFt": 867,
+          "fromJunction": "jct (John Muir Trail / Laura Lake Trail)",
+          "toJunction": "jct (Garnet Lake Cutoff / John Muir Trail)",
+          "midpoint": {
+            "lat": 37.7074718,
+            "lon": -119.1507371
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Clarice Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 28,
+          "trailName": "Garnet Lake Cutoff",
+          "lengthMi": 0.223,
+          "gainFt": 0,
+          "lossFt": 161,
+          "fromJunction": "jct (Garnet Lake Cutoff / John Muir Trail)",
+          "toJunction": "jct (Garnet Lake Cutoff / Altha Lake Trail)",
+          "midpoint": {
+            "lat": 37.715361,
+            "lon": -119.1502208
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Altha Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 29,
+          "trailName": "Garnet Lake Cutoff",
+          "lengthMi": 0.419,
+          "gainFt": 19,
+          "lossFt": 366,
+          "fromJunction": "jct (Garnet Lake Cutoff / Altha Lake Trail)",
+          "toJunction": "jct (River Trail / Garnet Lake Cutoff)",
+          "midpoint": {
+            "lat": 37.7188314,
+            "lon": -119.1468333
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Altha Lake"
+          ],
+          "streams": [
+            "Middle Fork San Joaquin River"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 30,
+          "trailName": "River Trail",
+          "lengthMi": 1.062,
+          "gainFt": 702,
+          "lossFt": 223,
+          "fromJunction": "jct (River Trail / Garnet Lake Cutoff)",
+          "toJunction": "jct (River Trail / Pacific Crest Trail)",
+          "midpoint": {
+            "lat": 37.7253072,
+            "lon": -119.1535683
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Badger Lakes"
+          ],
+          "streams": [
+            "Middle Fork San Joaquin River"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 31,
+          "trailName": "Pacific Crest Trail",
+          "lengthMi": 0.253,
+          "gainFt": 0,
+          "lossFt": 0,
+          "fromJunction": "jct (River Trail / Pacific Crest Trail)",
+          "toJunction": "jct (Spooky Meadow Trail / Pacific Crest Trail)",
+          "midpoint": {
+            "lat": 37.7301317,
+            "lon": -119.15729
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 32,
+          "trailName": "Spooky Meadow Trail",
+          "lengthMi": 0.919,
+          "gainFt": 259,
+          "lossFt": 118,
+          "fromJunction": "jct (Spooky Meadow Trail / Pacific Crest Trail)",
+          "toJunction": "jct (Clark Lakes Trail / Spooky Meadow Trail)",
+          "midpoint": {
+            "lat": 37.7334959,
+            "lon": -119.148877
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Clark Lakes",
+            "Summit Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 33,
+          "trailName": "Clark Lakes Trail",
+          "lengthMi": 1.838,
+          "gainFt": 129,
+          "lossFt": 749,
+          "fromJunction": "jct (Clark Lakes Trail / Spooky Meadow Trail)",
+          "toJunction": "jct (Clark Lakes Trail)",
+          "midpoint": {
+            "lat": 37.7436019,
+            "lon": -119.1560358
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Gem Lake",
+            "Clark Lakes",
+            "Billy Lake"
+          ],
+          "streams": [
+            "Rush Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 34,
+          "trailName": "Clark Lakes Trail",
+          "lengthMi": 1.838,
+          "gainFt": 749,
+          "lossFt": 129,
+          "fromJunction": "jct (Clark Lakes Trail)",
+          "toJunction": "jct (Clark Lakes Trail / Spooky Meadow Trail)",
+          "midpoint": {
+            "lat": 37.7436019,
+            "lon": -119.1560358
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Gem Lake",
+            "Clark Lakes",
+            "Billy Lake"
+          ],
+          "streams": [
+            "Rush Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 35,
+          "trailName": "Spooky Meadow Trail",
+          "lengthMi": 0.919,
+          "gainFt": 118,
+          "lossFt": 259,
+          "fromJunction": "jct (Clark Lakes Trail / Spooky Meadow Trail)",
+          "toJunction": "jct (Spooky Meadow Trail / Pacific Crest Trail)",
+          "midpoint": {
+            "lat": 37.7334959,
+            "lon": -119.148877
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Clark Lakes",
+            "Summit Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 36,
+          "trailName": "Pacific Crest Trail",
+          "lengthMi": 0.274,
+          "gainFt": 0,
+          "lossFt": 0,
+          "fromJunction": "jct (Spooky Meadow Trail / Pacific Crest Trail)",
+          "toJunction": "jct (Badger Lake Spur Trail / Pacific Crest Trail)",
+          "midpoint": {
+            "lat": 37.7299152,
+            "lon": -119.1542353
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Badger Lakes"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 37,
+          "trailName": "Pacific Crest Trail",
+          "lengthMi": 0.347,
+          "gainFt": 56,
+          "lossFt": 69,
+          "fromJunction": "jct (Badger Lake Spur Trail / Pacific Crest Trail)",
+          "toJunction": "jct (Clark Lakes Trail / Pacific Crest Trail)",
+          "midpoint": {
+            "lat": 37.7300244,
+            "lon": -119.1487192
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Summit Lake",
+            "Badger Lakes"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 38,
+          "trailName": "Clark Lakes Trail",
+          "lengthMi": 0.933,
+          "gainFt": 0,
+          "lossFt": 699,
+          "fromJunction": "jct (Clark Lakes Trail / Pacific Crest Trail)",
+          "toJunction": "jct (River Trail / Clark Lakes Trail)",
+          "midpoint": {
+            "lat": 37.7224517,
+            "lon": -119.1392398
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Summit Lake",
+            "Badger Lakes"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        }
+      ]
+    },
+    "scenic": {
+      "clusterSize": 232,
+      "totalMiles": 39.4,
+      "totalGainFt": 10860,
+      "totalLossFt": 10902,
+      "distinctTrailCount": 9,
+      "distinctFeatureCount": 12,
+      "htRatio": 19,
+      "geoCenter": {
+        "lat": 37.605077808333334,
+        "lon": -119.1353866875
+      },
+      "trailheads": [
+        "jct (Anona Lake Trail / Summit Meadow - Holcomb Cutoff)"
+      ],
+      "allFeatures": [
+        {
+          "name": "Ashley Lake",
+          "type": "water"
+        },
+        {
+          "name": "Cargyle Creek",
+          "type": "stream"
+        },
+        {
+          "name": "East Fork Cargyle Creek",
+          "type": "stream"
+        },
+        {
+          "name": "Fern Lake",
+          "type": "lake"
+        },
+        {
+          "name": "Holcomb Lake",
+          "type": "water"
+        },
+        {
+          "name": "Iron Mountain",
+          "type": "peak"
+        },
+        {
+          "name": "King Creek",
+          "type": "stream"
+        },
+        {
+          "name": "Middle Fork San Joaquin River",
+          "type": "river"
+        },
+        {
+          "name": "Minaret Creek",
+          "type": "stream"
+        },
+        {
+          "name": "Noname Lake",
+          "type": "water"
+        },
+        {
+          "name": "North Fork San Joaquin River",
+          "type": "river"
+        },
+        {
+          "name": "Red Top Mountain",
+          "type": "peak"
+        }
+      ],
+      "segments": [
+        {
+          "segIdx": 0,
+          "trailName": "Summit Meadow - Holcomb Cutoff",
+          "lengthMi": 1.397,
+          "gainFt": 635,
+          "lossFt": 388,
+          "fromJunction": "jct (Anona Lake Trail / Summit Meadow - Holcomb Cutoff)",
+          "toJunction": "jct (Summit Meadow - Holcomb Cutoff / Holcomb Lake Trail)",
+          "midpoint": {
+            "lat": 37.6162158,
+            "lon": -119.1356349
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Fern Lake"
+          ],
+          "streams": [
+            "King Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 1,
+          "trailName": "Holcomb Lake Trail",
+          "lengthMi": 0.286,
+          "gainFt": 141,
+          "lossFt": 0,
+          "fromJunction": "jct (Summit Meadow - Holcomb Cutoff / Holcomb Lake Trail)",
+          "toJunction": "jct (Ashley Lake Trail / Holcomb Lake Trail)",
+          "midpoint": {
+            "lat": 37.6226872,
+            "lon": -119.1400418
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "King Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 2,
+          "trailName": "Ashley Lake Trail",
+          "lengthMi": 1.133,
+          "gainFt": 367,
+          "lossFt": 0,
+          "fromJunction": "jct (Ashley Lake Trail / Holcomb Lake Trail)",
+          "toJunction": "jct (Ashley Lake Trail)",
+          "midpoint": {
+            "lat": 37.6230611,
+            "lon": -119.151578
+          },
+          "peaks": [
+            "Iron Mountain"
+          ],
+          "passes": [],
+          "lakes": [
+            "Holcomb Lake",
+            "Noname Lake",
+            "Ashley Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 3,
+          "trailName": "Ashley Lake Trail",
+          "lengthMi": 1.133,
+          "gainFt": 0,
+          "lossFt": 367,
+          "fromJunction": "jct (Ashley Lake Trail)",
+          "toJunction": "jct (Ashley Lake Trail / Holcomb Lake Trail)",
+          "midpoint": {
+            "lat": 37.6230611,
+            "lon": -119.151578
+          },
+          "peaks": [
+            "Iron Mountain"
+          ],
+          "passes": [],
+          "lakes": [
+            "Holcomb Lake",
+            "Noname Lake",
+            "Ashley Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 4,
+          "trailName": "Holcomb Lake Trail",
+          "lengthMi": 0.899,
+          "gainFt": 375,
+          "lossFt": 76,
+          "fromJunction": "jct (Ashley Lake Trail / Holcomb Lake Trail)",
+          "toJunction": "jct (Holcomb Lake Trail)",
+          "midpoint": {
+            "lat": 37.6264728,
+            "lon": -119.1472086
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Holcomb Lake",
+            "Noname Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 5,
+          "trailName": "Holcomb Lake Trail",
+          "lengthMi": 0.899,
+          "gainFt": 76,
+          "lossFt": 375,
+          "fromJunction": "jct (Holcomb Lake Trail)",
+          "toJunction": "jct (Ashley Lake Trail / Holcomb Lake Trail)",
+          "midpoint": {
+            "lat": 37.6264728,
+            "lon": -119.1472086
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Holcomb Lake",
+            "Noname Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 6,
+          "trailName": "Holcomb Lake Trail",
+          "lengthMi": 0.286,
+          "gainFt": 0,
+          "lossFt": 141,
+          "fromJunction": "jct (Ashley Lake Trail / Holcomb Lake Trail)",
+          "toJunction": "jct (Summit Meadow - Holcomb Cutoff / Holcomb Lake Trail)",
+          "midpoint": {
+            "lat": 37.6226872,
+            "lon": -119.1400418
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "King Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 7,
+          "trailName": "Holcomb Lake Trail",
+          "lengthMi": 0.247,
+          "gainFt": 0,
+          "lossFt": 0,
+          "fromJunction": "jct (Summit Meadow - Holcomb Cutoff / Holcomb Lake Trail)",
+          "toJunction": "jct (Superior Lake Trail / Holcomb Lake Trail)",
+          "midpoint": {
+            "lat": 37.6240595,
+            "lon": -119.1364047
+          },
+          "peaks": [
+            "Red Top Mountain"
+          ],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "King Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 8,
+          "trailName": "Superior Lake Trail",
+          "lengthMi": 4.175,
+          "gainFt": 932,
+          "lossFt": 1890,
+          "fromJunction": "jct (Superior Lake Trail / Holcomb Lake Trail)",
+          "toJunction": "jct (John Muir Trail / Superior Lake Trail)",
+          "midpoint": {
+            "lat": 37.6347827,
+            "lon": -119.1120583
+          },
+          "peaks": [
+            "Red Top Mountain"
+          ],
+          "passes": [],
+          "lakes": [],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 9,
+          "trailName": "John Muir Trail",
+          "lengthMi": 0.835,
+          "gainFt": 0,
+          "lossFt": 407,
+          "fromJunction": "jct (John Muir Trail / Superior Lake Trail)",
+          "toJunction": "jct (Pacific Crest Trail / John Muir Trail)",
+          "midpoint": {
+            "lat": 37.6362505,
+            "lon": -119.0915793
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "Minaret Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 10,
+          "trailName": "(unnamed)",
+          "lengthMi": 0.457,
+          "gainFt": 0,
+          "lossFt": 164,
+          "fromJunction": "jct (Pacific Crest Trail / John Muir Trail)",
+          "toJunction": "Minaret Lake Trailhead",
+          "midpoint": {
+            "lat": 37.6302455,
+            "lon": -119.0873686
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 11,
+          "trailName": "(unnamed)",
+          "lengthMi": 0.032,
+          "gainFt": 0,
+          "lossFt": 0,
+          "fromJunction": "Minaret Lake Trailhead",
+          "toJunction": "junction 2148979804",
+          "midpoint": {
+            "lat": 37.6274159,
+            "lon": -119.0861779
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "Middle Fork San Joaquin River"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 12,
+          "trailName": "(unnamed)",
+          "lengthMi": 0.032,
+          "gainFt": 0,
+          "lossFt": 0,
+          "fromJunction": "junction 2148979804",
+          "toJunction": "Minaret Lake Trailhead",
+          "midpoint": {
+            "lat": 37.6274159,
+            "lon": -119.0861779
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "Middle Fork San Joaquin River"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 13,
+          "trailName": "(unnamed)",
+          "lengthMi": 0.457,
+          "gainFt": 164,
+          "lossFt": 0,
+          "fromJunction": "Minaret Lake Trailhead",
+          "toJunction": "jct (Pacific Crest Trail / John Muir Trail)",
+          "midpoint": {
+            "lat": 37.6302455,
+            "lon": -119.0873686
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 14,
+          "trailName": "Pacific Crest Trail",
+          "lengthMi": 1.964,
+          "gainFt": 499,
+          "lossFt": 449,
+          "fromJunction": "jct (Pacific Crest Trail / John Muir Trail)",
+          "toJunction": "jct (Pacific Crest Trail)",
+          "midpoint": {
+            "lat": 37.6436152,
+            "lon": -119.0808937
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "Middle Fork San Joaquin River"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 15,
+          "trailName": "Pacific Crest Trail",
+          "lengthMi": 1.964,
+          "gainFt": 449,
+          "lossFt": 499,
+          "fromJunction": "jct (Pacific Crest Trail)",
+          "toJunction": "jct (Pacific Crest Trail / John Muir Trail)",
+          "midpoint": {
+            "lat": 37.6436152,
+            "lon": -119.0808937
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "Middle Fork San Joaquin River"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 16,
+          "trailName": "John Muir Trail",
+          "lengthMi": 0.671,
+          "gainFt": 466,
+          "lossFt": 335,
+          "fromJunction": "jct (Pacific Crest Trail / John Muir Trail)",
+          "toJunction": "jct (John Muir Trail / King Creek Trail)",
+          "midpoint": {
+            "lat": 37.6280342,
+            "lon": -119.0880847
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 17,
+          "trailName": "John Muir Trail",
+          "lengthMi": 1.026,
+          "gainFt": 236,
+          "lossFt": 616,
+          "fromJunction": "jct (John Muir Trail / King Creek Trail)",
+          "toJunction": "jct (John Muir Trail)",
+          "midpoint": {
+            "lat": 37.6176308,
+            "lon": -119.0867785
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "Middle Fork San Joaquin River"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 18,
+          "trailName": "John Muir Trail",
+          "lengthMi": 1.026,
+          "gainFt": 616,
+          "lossFt": 236,
+          "fromJunction": "jct (John Muir Trail)",
+          "toJunction": "jct (John Muir Trail / King Creek Trail)",
+          "midpoint": {
+            "lat": 37.6176308,
+            "lon": -119.0867785
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "Middle Fork San Joaquin River"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 19,
+          "trailName": "King Creek Trail",
+          "lengthMi": 1.219,
+          "gainFt": 157,
+          "lossFt": 308,
+          "fromJunction": "jct (John Muir Trail / King Creek Trail)",
+          "toJunction": "jct (King Creek Trail / Summit Meadow Trail)",
+          "midpoint": {
+            "lat": 37.6174354,
+            "lon": -119.0952301
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 20,
+          "trailName": "Summit Meadow Trail",
+          "lengthMi": 0.02,
+          "gainFt": 0,
+          "lossFt": 0,
+          "fromJunction": "jct (King Creek Trail / Summit Meadow Trail)",
+          "toJunction": "jct (Summit Meadow Trail)",
+          "midpoint": {
+            "lat": 37.6128419,
+            "lon": -119.0994868
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 21,
+          "trailName": "Summit Meadow Trail",
+          "lengthMi": 2.277,
+          "gainFt": 1184,
+          "lossFt": 187,
+          "fromJunction": "jct (Summit Meadow Trail)",
+          "toJunction": "jct (Summit Meadow - Holcomb Cutoff / Summit Meadow Trail)",
+          "midpoint": {
+            "lat": 37.6066098,
+            "lon": -119.110449
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "King Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 22,
+          "trailName": "Summit Meadow Trail",
+          "lengthMi": 0.389,
+          "gainFt": 386,
+          "lossFt": 49,
+          "fromJunction": "jct (Summit Meadow - Holcomb Cutoff / Summit Meadow Trail)",
+          "toJunction": "jct (Mammoth Trail / Summit Meadow Trail / Lion Point Trail)",
+          "midpoint": {
+            "lat": 37.6038495,
+            "lon": -119.1218323
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 23,
+          "trailName": "Mammoth Trail",
+          "lengthMi": 4.53,
+          "gainFt": 307,
+          "lossFt": 1383,
+          "fromJunction": "jct (Mammoth Trail / Summit Meadow Trail / Lion Point Trail)",
+          "toJunction": "jct (Mammoth Trail / Iron Lake Trail)",
+          "midpoint": {
+            "lat": 37.5848583,
+            "lon": -119.146412
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "East Fork Cargyle Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 24,
+          "trailName": "Mammoth Trail",
+          "lengthMi": 0.039,
+          "gainFt": 0,
+          "lossFt": 0,
+          "fromJunction": "jct (Mammoth Trail / Iron Lake Trail)",
+          "toJunction": "jct (Mammoth Trail / Iron Creek Trail)",
+          "midpoint": {
+            "lat": 37.5747401,
+            "lon": -119.1736257
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 25,
+          "trailName": "Mammoth Trail",
+          "lengthMi": 1.429,
+          "gainFt": 33,
+          "lossFt": 818,
+          "fromJunction": "jct (Mammoth Trail / Iron Creek Trail)",
+          "toJunction": "jct (Mammoth Trail / Upper French Trail)",
+          "midpoint": {
+            "lat": 37.5691958,
+            "lon": -119.1839629
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "Cargyle Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 26,
+          "trailName": "Mammoth Trail",
+          "lengthMi": 0.063,
+          "gainFt": 0,
+          "lossFt": 92,
+          "fromJunction": "jct (Mammoth Trail / Upper French Trail)",
+          "toJunction": "jct (Mammoth Trail / Snake Meadow Trail)",
+          "midpoint": {
+            "lat": 37.5606745,
+            "lon": -119.1903842
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 27,
+          "trailName": "Mammoth Trail",
+          "lengthMi": 1.075,
+          "gainFt": 89,
+          "lossFt": 850,
+          "fromJunction": "jct (Mammoth Trail / Snake Meadow Trail)",
+          "toJunction": "jct (Mammoth Trail / Junction Butte Trail)",
+          "midpoint": {
+            "lat": 37.5565835,
+            "lon": -119.1995359
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 28,
+          "trailName": "Mammoth Trail",
+          "lengthMi": 0.684,
+          "gainFt": 60,
+          "lossFt": 375,
+          "fromJunction": "jct (Mammoth Trail / Junction Butte Trail)",
+          "toJunction": "jct (Mammoth Trail)",
+          "midpoint": {
+            "lat": 37.5566941,
+            "lon": -119.2039561
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "North Fork San Joaquin River"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 29,
+          "trailName": "Mammoth Trail",
+          "lengthMi": 0.02,
+          "gainFt": 0,
+          "lossFt": 0,
+          "fromJunction": "jct (Mammoth Trail)",
+          "toJunction": "jct (Mammoth Trail)",
+          "midpoint": {
+            "lat": 37.5603693,
+            "lon": -119.2083496
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 30,
+          "trailName": "Mammoth Trail",
+          "lengthMi": 0.02,
+          "gainFt": 0,
+          "lossFt": 0,
+          "fromJunction": "jct (Mammoth Trail)",
+          "toJunction": "jct (Mammoth Trail)",
+          "midpoint": {
+            "lat": 37.5603693,
+            "lon": -119.2083496
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 31,
+          "trailName": "Mammoth Trail",
+          "lengthMi": 0.684,
+          "gainFt": 375,
+          "lossFt": 60,
+          "fromJunction": "jct (Mammoth Trail)",
+          "toJunction": "jct (Mammoth Trail / Junction Butte Trail)",
+          "midpoint": {
+            "lat": 37.5566941,
+            "lon": -119.2039561
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "North Fork San Joaquin River"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 32,
+          "trailName": "Mammoth Trail",
+          "lengthMi": 1.075,
+          "gainFt": 850,
+          "lossFt": 89,
+          "fromJunction": "jct (Mammoth Trail / Junction Butte Trail)",
+          "toJunction": "jct (Mammoth Trail / Snake Meadow Trail)",
+          "midpoint": {
+            "lat": 37.5565835,
+            "lon": -119.1995359
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 33,
+          "trailName": "Mammoth Trail",
+          "lengthMi": 0.063,
+          "gainFt": 92,
+          "lossFt": 0,
+          "fromJunction": "jct (Mammoth Trail / Snake Meadow Trail)",
+          "toJunction": "jct (Mammoth Trail / Upper French Trail)",
+          "midpoint": {
+            "lat": 37.5606745,
+            "lon": -119.1903842
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 34,
+          "trailName": "Mammoth Trail",
+          "lengthMi": 1.429,
+          "gainFt": 818,
+          "lossFt": 33,
+          "fromJunction": "jct (Mammoth Trail / Upper French Trail)",
+          "toJunction": "jct (Mammoth Trail / Iron Creek Trail)",
+          "midpoint": {
+            "lat": 37.5691958,
+            "lon": -119.1839629
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "Cargyle Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 35,
+          "trailName": "Mammoth Trail",
+          "lengthMi": 0.039,
+          "gainFt": 0,
+          "lossFt": 0,
+          "fromJunction": "jct (Mammoth Trail / Iron Creek Trail)",
+          "toJunction": "jct (Mammoth Trail / Iron Lake Trail)",
+          "midpoint": {
+            "lat": 37.5747401,
+            "lon": -119.1736257
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 36,
+          "trailName": "Mammoth Trail",
+          "lengthMi": 4.53,
+          "gainFt": 1383,
+          "lossFt": 307,
+          "fromJunction": "jct (Mammoth Trail / Iron Lake Trail)",
+          "toJunction": "jct (Mammoth Trail / Summit Meadow Trail / Lion Point Trail)",
+          "midpoint": {
+            "lat": 37.5848583,
+            "lon": -119.146412
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "East Fork Cargyle Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 37,
+          "trailName": "Summit Meadow Trail",
+          "lengthMi": 0.389,
+          "gainFt": 49,
+          "lossFt": 386,
+          "fromJunction": "jct (Mammoth Trail / Summit Meadow Trail / Lion Point Trail)",
+          "toJunction": "jct (Summit Meadow - Holcomb Cutoff / Summit Meadow Trail)",
+          "midpoint": {
+            "lat": 37.6038495,
+            "lon": -119.1218323
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 38,
+          "trailName": "Summit Meadow - Holcomb Cutoff",
+          "lengthMi": 0.498,
+          "gainFt": 121,
+          "lossFt": 22,
+          "fromJunction": "jct (Summit Meadow - Holcomb Cutoff / Summit Meadow Trail)",
+          "toJunction": "jct (Anona Lake Trail / Summit Meadow - Holcomb Cutoff)",
+          "midpoint": {
+            "lat": 37.6061104,
+            "lon": -119.1270357
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Fern Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        }
+      ]
+    },
+    "explorer": {
+      "clusterSize": 3180,
+      "totalMiles": 38.4,
+      "totalGainFt": 12824,
+      "totalLossFt": 12824,
+      "distinctTrailCount": 6,
+      "distinctFeatureCount": 22,
+      "htRatio": 50,
+      "geoCenter": {
+        "lat": 37.57444695,
+        "lon": -118.98738258333333
+      },
+      "trailheads": [
+        "jct (Coldwater Campground to Lake George Trail / T J Lake Loop Trail)"
+      ],
+      "allFeatures": [
+        {
+          "name": "Arrowhead Lake",
+          "type": "lake"
+        },
+        {
+          "name": "Barney Lake",
+          "type": "lake"
+        },
+        {
+          "name": "Cold Water Creek",
+          "type": "stream"
+        },
+        {
+          "name": "Crater Creek",
+          "type": "stream"
+        },
+        {
+          "name": "Crystal Crag",
+          "type": "peak"
+        },
+        {
+          "name": "Deer Creek",
+          "type": "stream"
+        },
+        {
+          "name": "Duck Lake",
+          "type": "lake"
+        },
+        {
+          "name": "Duck Pass",
+          "type": "saddle"
+        },
+        {
+          "name": "Emerald Lake",
+          "type": "lake"
+        },
+        {
+          "name": "Heart Lake",
+          "type": "water"
+        },
+        {
+          "name": "Herlihy Peak",
+          "type": "peak"
+        },
+        {
+          "name": "Lake Barrett",
+          "type": "water"
+        },
+        {
+          "name": "Lake George",
+          "type": "lake"
+        },
+        {
+          "name": "Lake Mamie",
+          "type": "water"
+        },
+        {
+          "name": "Lake Mary",
+          "type": "lake"
+        },
+        {
+          "name": "Mammoth Creek",
+          "type": "stream"
+        },
+        {
+          "name": "Red Lake",
+          "type": "water"
+        },
+        {
+          "name": "Skelton Lake",
+          "type": "lake"
+        },
+        {
+          "name": "T J Lake",
+          "type": "water"
+        },
+        {
+          "name": "Way Lake",
+          "type": "lake"
+        },
+        {
+          "name": "Woods Lakes",
+          "type": "water"
+        },
+        {
+          "name": "Woods Lakes",
+          "type": "water"
+        }
+      ],
+      "segments": [
+        {
+          "segIdx": 0,
+          "trailName": "Coldwater Campground to Lake George Trail",
+          "lengthMi": 0.137,
+          "gainFt": 0,
+          "lossFt": 0,
+          "fromJunction": "jct (Coldwater Campground to Lake George Trail / T J Lake Loop Trail)",
+          "toJunction": "jct (Coldwater Campground to Lake George Trail / Barrett Lake to Lake Mary Trail)",
+          "midpoint": {
+            "lat": 37.5948554,
+            "lon": -119.0067158
+          },
+          "peaks": [
+            "Crystal Crag"
+          ],
+          "passes": [],
+          "lakes": [
+            "Lake Barrett",
+            "T J Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 1,
+          "trailName": "Coldwater Campground to Lake George Trail",
+          "lengthMi": 1.51,
+          "gainFt": 337,
+          "lossFt": 249,
+          "fromJunction": "jct (Coldwater Campground to Lake George Trail / Barrett Lake to Lake Mary Trail)",
+          "toJunction": "jct (Emerald Lake Trail / Coldwater Campground to Lake George Trail)",
+          "midpoint": {
+            "lat": 37.5922227,
+            "lon": -118.9992374
+          },
+          "peaks": [
+            "Crystal Crag"
+          ],
+          "passes": [],
+          "lakes": [
+            "Lake Barrett",
+            "T J Lake",
+            "Way Lake",
+            "Emerald Lake"
+          ],
+          "streams": [
+            "Cold Water Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 2,
+          "trailName": "Emerald Lake Trail",
+          "lengthMi": 0.455,
+          "gainFt": 0,
+          "lossFt": 200,
+          "fromJunction": "jct (Emerald Lake Trail / Coldwater Campground to Lake George Trail)",
+          "toJunction": "jct (Emerald Lake Trail)",
+          "midpoint": {
+            "lat": 37.5893493,
+            "lon": -118.9920394
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "Cold Water Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 3,
+          "trailName": "Emerald Lake Trail",
+          "lengthMi": 0.455,
+          "gainFt": 200,
+          "lossFt": 0,
+          "fromJunction": "jct (Emerald Lake Trail)",
+          "toJunction": "jct (Emerald Lake Trail / Coldwater Campground to Lake George Trail)",
+          "midpoint": {
+            "lat": 37.5893493,
+            "lon": -118.9920394
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "Cold Water Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 4,
+          "trailName": "Emerald Lake Trail",
+          "lengthMi": 0.378,
+          "gainFt": 174,
+          "lossFt": 0,
+          "fromJunction": "jct (Emerald Lake Trail / Coldwater Campground to Lake George Trail)",
+          "toJunction": "jct (Emerald Lake Trail / Sky Meadows Trail)",
+          "midpoint": {
+            "lat": 37.5840949,
+            "lon": -118.9882634
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Emerald Lake"
+          ],
+          "streams": [
+            "Cold Water Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 5,
+          "trailName": "Emerald Lake Trail",
+          "lengthMi": 0.516,
+          "gainFt": 315,
+          "lossFt": 0,
+          "fromJunction": "jct (Emerald Lake Trail / Sky Meadows Trail)",
+          "toJunction": "jct (Duck Pass Trail / Emerald Lake Trail)",
+          "midpoint": {
+            "lat": 37.5808356,
+            "lon": -118.9831956
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Skelton Lake",
+            "Emerald Lake",
+            "Arrowhead Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 6,
+          "trailName": "Duck Pass Trail",
+          "lengthMi": 0.394,
+          "gainFt": 83,
+          "lossFt": 14,
+          "fromJunction": "jct (Duck Pass Trail / Emerald Lake Trail)",
+          "toJunction": "jct (Duck Pass Trail / Woods Lakes Trail)",
+          "midpoint": {
+            "lat": 37.5778671,
+            "lon": -118.9778405
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Skelton Lake",
+            "Arrowhead Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 7,
+          "trailName": "Duck Pass Trail",
+          "lengthMi": 1.466,
+          "gainFt": 757,
+          "lossFt": 291,
+          "fromJunction": "jct (Duck Pass Trail / Woods Lakes Trail)",
+          "toJunction": "jct (Duck Pass Trail / Duck Pass Trail Alternate Route)",
+          "midpoint": {
+            "lat": 37.5677374,
+            "lon": -118.9701895
+          },
+          "peaks": [
+            "Herlihy Peak"
+          ],
+          "passes": [],
+          "lakes": [
+            "Skelton Lake",
+            "Barney Lake",
+            "Woods Lakes",
+            "Red Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 8,
+          "trailName": "Duck Pass Trail",
+          "lengthMi": 0.064,
+          "gainFt": 187,
+          "lossFt": 0,
+          "fromJunction": "jct (Duck Pass Trail / Duck Pass Trail Alternate Route)",
+          "toJunction": "jct (Duck Pass Trail / Duck Pass Trail Alternate Route)",
+          "midpoint": {
+            "lat": 37.5623393,
+            "lon": -118.9641291
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Barney Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 9,
+          "trailName": "Duck Pass Trail",
+          "lengthMi": 0.589,
+          "gainFt": 259,
+          "lossFt": 131,
+          "fromJunction": "jct (Duck Pass Trail / Duck Pass Trail Alternate Route)",
+          "toJunction": "jct (Duck Pass Trail)",
+          "midpoint": {
+            "lat": 37.5605565,
+            "lon": -118.9642257
+          },
+          "peaks": [],
+          "passes": [
+            "Duck Pass"
+          ],
+          "lakes": [
+            "Barney Lake",
+            "Duck Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 10,
+          "trailName": "Duck Pass Trail",
+          "lengthMi": 0.044,
+          "gainFt": 0,
+          "lossFt": 105,
+          "fromJunction": "jct (Duck Pass Trail)",
+          "toJunction": "jct (Duck Pass Trail / Pika Lake Trail)",
+          "midpoint": {
+            "lat": 37.5584313,
+            "lon": -118.9623159
+          },
+          "peaks": [],
+          "passes": [
+            "Duck Pass"
+          ],
+          "lakes": [
+            "Duck Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 11,
+          "trailName": "Duck Pass Trail",
+          "lengthMi": 1.778,
+          "gainFt": 615,
+          "lossFt": 1136,
+          "fromJunction": "jct (Duck Pass Trail / Pika Lake Trail)",
+          "toJunction": "jct (Duck Pass Trail / John Muir Trail)",
+          "midpoint": {
+            "lat": 37.5451834,
+            "lon": -118.9682302
+          },
+          "peaks": [],
+          "passes": [
+            "Duck Pass"
+          ],
+          "lakes": [
+            "Duck Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 12,
+          "trailName": "John Muir Trail",
+          "lengthMi": 2.241,
+          "gainFt": 1320,
+          "lossFt": 1514,
+          "fromJunction": "jct (Duck Pass Trail / John Muir Trail)",
+          "toJunction": "jct (John Muir Trail)",
+          "midpoint": {
+            "lat": 37.5263538,
+            "lon": -118.9649767
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 13,
+          "trailName": "John Muir Trail",
+          "lengthMi": 2.241,
+          "gainFt": 1514,
+          "lossFt": 1320,
+          "fromJunction": "jct (John Muir Trail)",
+          "toJunction": "jct (Duck Pass Trail / John Muir Trail)",
+          "midpoint": {
+            "lat": 37.5263538,
+            "lon": -118.9649767
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 14,
+          "trailName": "John Muir Trail",
+          "lengthMi": 5.478,
+          "gainFt": 1131,
+          "lossFt": 2115,
+          "fromJunction": "jct (Duck Pass Trail / John Muir Trail)",
+          "toJunction": "jct (John Muir Trail / Deer Creek Trail)",
+          "midpoint": {
+            "lat": 37.5496467,
+            "lon": -118.9990283
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "Deer Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 15,
+          "trailName": "John Muir Trail",
+          "lengthMi": 1.833,
+          "gainFt": 190,
+          "lossFt": 338,
+          "fromJunction": "jct (John Muir Trail / Deer Creek Trail)",
+          "toJunction": "jct (John Muir Trail)",
+          "midpoint": {
+            "lat": 37.5745573,
+            "lon": -119.0438873
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "Crater Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 16,
+          "trailName": "John Muir Trail",
+          "lengthMi": 1.833,
+          "gainFt": 338,
+          "lossFt": 190,
+          "fromJunction": "jct (John Muir Trail)",
+          "toJunction": "jct (John Muir Trail / Deer Creek Trail)",
+          "midpoint": {
+            "lat": 37.5745573,
+            "lon": -119.0438873
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "Crater Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 17,
+          "trailName": "John Muir Trail",
+          "lengthMi": 5.478,
+          "gainFt": 2115,
+          "lossFt": 1131,
+          "fromJunction": "jct (John Muir Trail / Deer Creek Trail)",
+          "toJunction": "jct (Duck Pass Trail / John Muir Trail)",
+          "midpoint": {
+            "lat": 37.5496467,
+            "lon": -118.9990283
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [],
+          "streams": [
+            "Deer Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 18,
+          "trailName": "Duck Pass Trail",
+          "lengthMi": 1.778,
+          "gainFt": 1136,
+          "lossFt": 615,
+          "fromJunction": "jct (Duck Pass Trail / John Muir Trail)",
+          "toJunction": "jct (Duck Pass Trail / Pika Lake Trail)",
+          "midpoint": {
+            "lat": 37.5451834,
+            "lon": -118.9682302
+          },
+          "peaks": [],
+          "passes": [
+            "Duck Pass"
+          ],
+          "lakes": [
+            "Duck Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 19,
+          "trailName": "Duck Pass Trail",
+          "lengthMi": 0.044,
+          "gainFt": 105,
+          "lossFt": 0,
+          "fromJunction": "jct (Duck Pass Trail / Pika Lake Trail)",
+          "toJunction": "jct (Duck Pass Trail)",
+          "midpoint": {
+            "lat": 37.5584313,
+            "lon": -118.9623159
+          },
+          "peaks": [],
+          "passes": [
+            "Duck Pass"
+          ],
+          "lakes": [
+            "Duck Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 20,
+          "trailName": "Duck Pass Trail",
+          "lengthMi": 0.589,
+          "gainFt": 131,
+          "lossFt": 259,
+          "fromJunction": "jct (Duck Pass Trail)",
+          "toJunction": "jct (Duck Pass Trail / Duck Pass Trail Alternate Route)",
+          "midpoint": {
+            "lat": 37.5605565,
+            "lon": -118.9642257
+          },
+          "peaks": [],
+          "passes": [
+            "Duck Pass"
+          ],
+          "lakes": [
+            "Barney Lake",
+            "Duck Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 21,
+          "trailName": "Duck Pass Trail Alternate Route",
+          "lengthMi": 0.04,
+          "gainFt": 0,
+          "lossFt": 187,
+          "fromJunction": "jct (Duck Pass Trail / Duck Pass Trail Alternate Route)",
+          "toJunction": "jct (Duck Pass Trail / Duck Pass Trail Alternate Route)",
+          "midpoint": {
+            "lat": 37.5623654,
+            "lon": -118.9636166
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Barney Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 22,
+          "trailName": "Duck Pass Trail",
+          "lengthMi": 1.466,
+          "gainFt": 291,
+          "lossFt": 757,
+          "fromJunction": "jct (Duck Pass Trail / Duck Pass Trail Alternate Route)",
+          "toJunction": "jct (Duck Pass Trail / Woods Lakes Trail)",
+          "midpoint": {
+            "lat": 37.5677374,
+            "lon": -118.9701895
+          },
+          "peaks": [
+            "Herlihy Peak"
+          ],
+          "passes": [],
+          "lakes": [
+            "Skelton Lake",
+            "Barney Lake",
+            "Woods Lakes",
+            "Red Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 23,
+          "trailName": "Duck Pass Trail",
+          "lengthMi": 0.394,
+          "gainFt": 14,
+          "lossFt": 83,
+          "fromJunction": "jct (Duck Pass Trail / Woods Lakes Trail)",
+          "toJunction": "jct (Duck Pass Trail / Emerald Lake Trail)",
+          "midpoint": {
+            "lat": 37.5778671,
+            "lon": -118.9778405
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Skelton Lake",
+            "Arrowhead Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 24,
+          "trailName": "Duck Pass Trail",
+          "lengthMi": 0.277,
+          "gainFt": 0,
+          "lossFt": 184,
+          "fromJunction": "jct (Duck Pass Trail / Emerald Lake Trail)",
+          "toJunction": "jct (Duck Pass Trail / Arrowhead Lake Spur)",
+          "midpoint": {
+            "lat": 37.5818102,
+            "lon": -118.9806569
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Skelton Lake",
+            "Arrowhead Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 25,
+          "trailName": "Duck Pass Trail",
+          "lengthMi": 0.947,
+          "gainFt": 44,
+          "lossFt": 569,
+          "fromJunction": "jct (Duck Pass Trail / Arrowhead Lake Spur)",
+          "toJunction": "Duck Pass Trailhead",
+          "midpoint": {
+            "lat": 37.5882419,
+            "lon": -118.9844543
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Arrowhead Lake",
+            "Heart Lake"
+          ],
+          "streams": [
+            "Mammoth Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 26,
+          "trailName": "Duck Pass Trail",
+          "lengthMi": 0.947,
+          "gainFt": 569,
+          "lossFt": 44,
+          "fromJunction": "Duck Pass Trailhead",
+          "toJunction": "jct (Duck Pass Trail / Arrowhead Lake Spur)",
+          "midpoint": {
+            "lat": 37.5882419,
+            "lon": -118.9844543
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Arrowhead Lake",
+            "Heart Lake"
+          ],
+          "streams": [
+            "Mammoth Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 27,
+          "trailName": "Duck Pass Trail",
+          "lengthMi": 0.277,
+          "gainFt": 184,
+          "lossFt": 0,
+          "fromJunction": "jct (Duck Pass Trail / Arrowhead Lake Spur)",
+          "toJunction": "jct (Duck Pass Trail / Emerald Lake Trail)",
+          "midpoint": {
+            "lat": 37.5818102,
+            "lon": -118.9806569
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Skelton Lake",
+            "Arrowhead Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 28,
+          "trailName": "Emerald Lake Trail",
+          "lengthMi": 0.516,
+          "gainFt": 0,
+          "lossFt": 315,
+          "fromJunction": "jct (Duck Pass Trail / Emerald Lake Trail)",
+          "toJunction": "jct (Emerald Lake Trail / Sky Meadows Trail)",
+          "midpoint": {
+            "lat": 37.5808356,
+            "lon": -118.9831956
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Skelton Lake",
+            "Emerald Lake",
+            "Arrowhead Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 29,
+          "trailName": "Emerald Lake Trail",
+          "lengthMi": 0.378,
+          "gainFt": 0,
+          "lossFt": 174,
+          "fromJunction": "jct (Emerald Lake Trail / Sky Meadows Trail)",
+          "toJunction": "jct (Emerald Lake Trail / Coldwater Campground to Lake George Trail)",
+          "midpoint": {
+            "lat": 37.5840949,
+            "lon": -118.9882634
+          },
+          "peaks": [],
+          "passes": [],
+          "lakes": [
+            "Emerald Lake"
+          ],
+          "streams": [
+            "Cold Water Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 30,
+          "trailName": "Coldwater Campground to Lake George Trail",
+          "lengthMi": 1.51,
+          "gainFt": 249,
+          "lossFt": 337,
+          "fromJunction": "jct (Emerald Lake Trail / Coldwater Campground to Lake George Trail)",
+          "toJunction": "jct (Coldwater Campground to Lake George Trail / Barrett Lake to Lake Mary Trail)",
+          "midpoint": {
+            "lat": 37.5922227,
+            "lon": -118.9992374
+          },
+          "peaks": [
+            "Crystal Crag"
+          ],
+          "passes": [],
+          "lakes": [
+            "Lake Barrett",
+            "T J Lake",
+            "Way Lake",
+            "Emerald Lake"
+          ],
+          "streams": [
+            "Cold Water Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 31,
+          "trailName": "Barrett Lake to Lake Mary Trail",
+          "lengthMi": 1.094,
+          "gainFt": 114,
+          "lossFt": 452,
+          "fromJunction": "jct (Coldwater Campground to Lake George Trail / Barrett Lake to Lake Mary Trail)",
+          "toJunction": "jct (Barrett Lake to Lake Mary Trail)",
+          "midpoint": {
+            "lat": 37.5986419,
+            "lon": -119.0046638
+          },
+          "peaks": [
+            "Crystal Crag"
+          ],
+          "passes": [],
+          "lakes": [
+            "Lake George",
+            "Lake Barrett",
+            "T J Lake",
+            "Lake Mary",
+            "Lake Mamie"
+          ],
+          "streams": [
+            "Mammoth Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 32,
+          "trailName": "Barrett Lake to Lake Mary Trail",
+          "lengthMi": 1.094,
+          "gainFt": 452,
+          "lossFt": 114,
+          "fromJunction": "jct (Barrett Lake to Lake Mary Trail)",
+          "toJunction": "jct (Coldwater Campground to Lake George Trail / Barrett Lake to Lake Mary Trail)",
+          "midpoint": {
+            "lat": 37.5986419,
+            "lon": -119.0046638
+          },
+          "peaks": [
+            "Crystal Crag"
+          ],
+          "passes": [],
+          "lakes": [
+            "Lake George",
+            "Lake Barrett",
+            "T J Lake",
+            "Lake Mary",
+            "Lake Mamie"
+          ],
+          "streams": [
+            "Mammoth Creek"
+          ],
+          "springs": [],
+          "landmarks": []
+        },
+        {
+          "segIdx": 33,
+          "trailName": "Coldwater Campground to Lake George Trail",
+          "lengthMi": 0.137,
+          "gainFt": 0,
+          "lossFt": 0,
+          "fromJunction": "jct (Coldwater Campground to Lake George Trail / Barrett Lake to Lake Mary Trail)",
+          "toJunction": "jct (Coldwater Campground to Lake George Trail / T J Lake Loop Trail)",
+          "midpoint": {
+            "lat": 37.5948554,
+            "lon": -119.0067158
+          },
+          "peaks": [
+            "Crystal Crag"
+          ],
+          "passes": [],
+          "lakes": [
+            "Lake Barrett",
+            "T J Lake"
+          ],
+          "streams": [],
+          "springs": [],
+          "landmarks": []
+        }
+      ]
+    }
+  }
+}

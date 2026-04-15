@@ -1,0 +1,126 @@
+```json
+[
+  {
+    "routeName": "Shadow Lake and Minaret Mine Loop",
+    "archetype": "classic",
+    "summary": "A 37.5-mile loop linking Shadow Lake, Ediza Lake, and Iceberg Lake beneath the Minarets, with a side trip to historic Minaret Mine. The route uses 10 miles of John Muir Trail and Pacific Crest Trail alongside quieter trails like Minaret Creek Trail and Shadow Creek Trail. You'll pass 25 named features including six major lakes and four Minaret peaks.",
+    "bestFor": "Intermediate backpackers seeking alpine lake variety with moderate crowds and a mix of iconic trail miles and quieter side routes.",
+    "itinerary": [
+      {
+        "day": 1,
+        "segmentIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+        "note": "Start on River Trail descending to the Middle Fork San Joaquin River, then climb Shadow Creek Trail past Olaine Lake to Shadow Lake. Continue on the John Muir Trail past Rosalie Lake, Gladys Lake, Emily Lake, and Johnston Lake—five alpine basins in a single day. Camp near Johnston Lake beneath Red Top Mountain."
+      },
+      {
+        "day": 2,
+        "segmentIds": [10, 11, 12, 13],
+        "note": "Ascend Minaret Creek Trail from Johnston Lake toward Red Top Mountain, then take the out-and-back Minaret Mine Trail to the historic mine site. Return to Minaret Creek and continue climbing beneath Riegelhuth Minaret. Camp along Minaret Creek below the Minarets."
+      },
+      {
+        "day": 3,
+        "segmentIds": [14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29],
+        "note": "Climb Cecile Lake Trail to Iceberg Lake, directly below Clyde Minaret and Riegelhuth Minaret. Descend Shadow Creek Trail past Ediza Lake and Leonard Minaret, retracing your steps back to Shadow Creek. Continue down to rejoin the John Muir Trail and climb toward Clarice Lake, then descend via Garnet Lake Cutoff to Altha Lake and the Middle Fork San Joaquin River."
+      },
+      {
+        "day": 4,
+        "segmentIds": [30, 31, 32, 33, 34, 35, 36, 37, 38],
+        "note": "Climb past Badger Lakes on River Trail, then take Pacific Crest Trail and Spooky Meadow Trail to Clark Lakes Trail for an out-and-back to Gem Lake, Billy Lake, and Clark Lakes. Return via Spooky Meadow Trail and Pacific Crest Trail, finishing the descent to the trailhead. Day 4 is your long day—12 miles with multiple climbs totaling 2,100 ft gain."
+      }
+    ],
+    "pros": [
+      "Six major alpine lakes (Shadow, Rosalie, Gladys, Emily, Johnston, Iceberg) plus Ediza Lake and Clark Lakes provide constant water access and scenic camps. The out-and-back to Minaret Mine adds historic interest at moderate effort."
+    ],
+    "cons": [
+      "Day 4 requires 12 miles with 2,100 ft of elevation gain split between multiple climbs, and the Clark Lakes out-and-back adds 7.4 miles of mostly lateral travel. The route uses 10.8 miles of John Muir Trail and Pacific Crest Trail, meaning moderate crowds on one-third of the loop."
+    ],
+    "gearTips": [
+      "Bear canister required—this is heavy grizzly country around Shadow Lake and the John Muir Trail corridor",
+      "Microspikes or trekking poles useful for early-season crossings of Shadow Creek above Ediza Lake",
+      "Wide-brim hat and sun protection for exposed Minaret Creek Trail and Clark Lakes approaches",
+      "Water filter sufficient—abundant water at all lake camps and along Shadow Creek and Minaret Creek"
+    ]
+  },
+  {
+    "routeName": "King Creek and Middle Fork Loop",
+    "archetype": "scenic",
+    "summary": "A 39.4-mile loop exploring the King Creek drainage, Holcomb Lake, Ashley Lake, and the Middle Fork San Joaquin River, with a 15.7-mile northern excursion on Mammoth Trail. The route uses 7.4 miles of John Muir Trail and Pacific Crest Trail but spends most miles on quieter trails beneath Iron Mountain and Red Top Mountain. You'll pass 12 named features including three alpine lakes.",
+    "bestFor": "Intermediate backpackers willing to trade iconic scenery for solitude, and comfortable with a long single day on Mammoth Trail.",
+    "itinerary": [
+      {
+        "day": 1,
+        "segmentIds": [0, 1, 2, 3, 4, 5, 6, 7],
+        "note": "Climb Summit Meadow-Holcomb Cutoff past Fern Lake and continue on Holcomb Lake Trail to Ashley Lake Trail. Make the out-and-back side trip beneath Iron Mountain to Ashley Lake, Noname Lake, and Holcomb Lake. Return to Holcomb Lake Trail and descend beneath Red Top Mountain toward King Creek."
+      },
+      {
+        "day": 2,
+        "segmentIds": [8, 9, 10, 11, 12, 13],
+        "note": "Descend Superior Lake Trail beneath Red Top Mountain, then drop to the John Muir Trail along Minaret Creek. Follow the John Muir Trail south along the Middle Fork San Joaquin River, then join the Pacific Crest Trail for a riverside traverse. Continue south on the John Muir Trail, crossing the Middle Fork multiple times."
+      },
+      {
+        "day": 3,
+        "segmentIds": [14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36],
+        "note": "Day 3 is your long day—19.6 miles. Continue on Pacific Crest Trail and John Muir Trail along the Middle Fork, then climb King Creek Trail and ascend Summit Meadow Trail along King Creek. The Mammoth Trail carries you 15.7 miles north through the East Fork Cargyle Creek and Cargyle Creek drainages to North Fork San Joaquin River—a sustained climb and descent with minimal named features. Descend Summit Meadow Trail to close the loop."
+      },
+      {
+        "day": 4,
+        "segmentIds": [37, 38],
+        "note": "Short finishing day—0.9 miles descending Summit Meadow Trail and Summit Meadow-Holcomb Cutoff past Fern Lake to the trailhead. Break camp early and you'll be out by mid-morning."
+      }
+    ],
+    "pros": [
+      "Only 7.4 miles on John Muir Trail and Pacific Crest Trail means minimal crowds. Holcomb Lake, Ashley Lake, and Noname Lake beneath Iron Mountain offer solitude compared to Shadow Lake corridor.",
+      "King Creek and Middle Fork San Joaquin River provide reliable water throughout, avoiding long dry stretches."
+    ],
+    "cons": [
+      "Day 3's 19.6 miles gain 5,734 ft and pass few named features on Mammoth Trail—it's a workday, not a scenic highlight. The route's 15.7 miles on Mammoth Trail are repetitive forest and meadow with limited alpine lakes or peaks.",
+      "Day 4 is only 0.9 miles, creating an unbalanced finish—redistribution would require splitting the long Mammoth Trail segment mid-route with limited camping options."
+    ],
+    "gearTips": [
+      "Bear canister required for Middle Fork San Joaquin River camps on Days 2-3",
+      "Extra water capacity (3L+) for Mammoth Trail on Day 3—sources are spaced and the mileage is high",
+      "Insect protection essential in July—King Creek, Fern Lake, and Mammoth Trail meadows are notorious for mosquitoes",
+      "Trekking poles helpful for the sustained climbing on Summit Meadow Trail and Mammoth Trail grades"
+    ]
+  },
+  {
+    "routeName": "Duck Pass and Mammoth Lakes Loop",
+    "archetype": "explorer",
+    "summary": "A 38.4-mile loop over Duck Pass linking eight Mammoth Lakes Basin lakes (Emerald, Skelton, Arrowhead, Barney, Duck, Lake George, Lake Mary, Lake Barrett) with 19 miles of John Muir Trail along Deer Creek and Crater Creek. The route crosses Duck Pass twice and explores Woods Lakes, Red Lake, and Heart Lake on the return. You'll gain 12,824 ft across the trip.",
+    "bestFor": "Strong intermediate backpackers seeking alpine lake variety and willing to trade John Muir Trail crowds for high-effort climbing over Duck Pass.",
+    "itinerary": [
+      {
+        "day": 1,
+        "segmentIds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+        "note": "Climb from the trailhead past Lake Barrett, T J Lake, Way Lake, and Emerald Lake beneath Crystal Crag. Ascend Emerald Lake Trail to Skelton Lake and Arrowhead Lake, then climb Duck Pass Trail over Duck Pass. Descend past Barney Lake, Woods Lakes, Red Lake, and Duck Lake to join the John Muir Trail along Deer Creek."
+      },
+      {
+        "day": 2,
+        "segmentIds": [12, 13],
+        "note": "Follow the John Muir Trail south along Deer Creek and Crater Creek through extended forest and meadow with minimal named features. This segment is well-graded but covers ground with limited alpine scenery. Camp along Crater Creek."
+      },
+      {
+        "day": 3,
+        "segmentIds": [14, 15, 16, 17],
+        "note": "Continue south on the John Muir Trail along Crater Creek, then turn north to retrace the same trail. This is your high-effort day—you'll regain all the elevation lost on Day 2 plus additional climbing, passing the same Deer Creek and Crater Creek features in reverse. Camp near the Duck Pass junction."
+      },
+      {
+        "day": 4,
+        "segmentIds": [18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33],
+        "note": "Day 4 is your long day—15.3 miles. Climb Duck Pass Trail back over Duck Pass, passing Duck Lake and Barney Lake. Descend past Woods Lakes, Red Lake, Arrowhead Lake, Heart Lake, and Skelton Lake beneath Herlihy Peak. Drop to Emerald Lake, then descend past Lake Barrett, T J Lake, and Way Lake beneath Crystal Crag. Complete the loop with a short out-and-back on Barrett Lake to Lake Mary Trail to Lake George, Lake Mary, and Lake Mamie."
+      }
+    ],
+    "pros": [
+      "Eight Mammoth Lakes Basin lakes (Emerald, Skelton, Arrowhead, Barney, Duck, Lake George, Lake Mary, Lake Barrett) plus Woods Lakes, Red Lake, and Heart Lake provide constant water and scenic variety. Duck Pass at 10,797 ft offers Sierra Crest views."
+    ],
+    "cons": [
+      "Days 2 and 3 total 12 miles and 6,608 ft of gain on the John Muir Trail along Deer Creek and Crater Creek with minimal alpine lakes or named peaks—the route's scenic payoff is heavily front- and back-loaded. Half the route's 19 John Muir Trail miles are on a repetitive out-and-back with high crowds."
+    ],
+    "gearTips": [
+      "Bear canister required—Mammoth Lakes Basin and John Muir Trail corridor have heavy bear activity",
+      "Microspikes or trekking poles essential for Duck Pass in July—snowfields often persist on the north side",
+      "Sun protection critical for exposed Duck Pass ascents and high-mileage John Muir Trail days",
+      "Water filter sufficient—Deer Creek, Crater Creek, and lake access every 2-3 miles"
+    ]
+  }
+]
+```
