@@ -1,39 +1,31 @@
 // rank-clusters.js
 // Scores every cluster against user preferences, then selects the top N
 // with a geographic diversity constraint: no two returned clusters may have
-// geographic centers within 3 miles of each other.
-//
-// Usage:
-//   import { rankClusters } from './rank-clusters.js';
-//   const top3 = await rankClusters(preferences, { count: 3 });
-//
-// Or run standalone:
-//   node rank-clusters.js
+// geographic centers within MIN_DISTANCE_MI of each other.
 
 import fs from 'node:fs/promises';
+import { haversineMiles } from './geo-utils.js';
 import { scoreCluster } from './score-cluster.js';
 
-const EARTH_RADIUS_MI = 3958.8;
+// ── Ranking constants ─────────────────────────────────────────────────
 const DEFAULT_CLUSTER_PATH = 'cache/clusters.json';
 const DEFAULT_COUNT = 3;
-const DEFAULT_MIN_DISTANCE_MI = 5;
-const DEFAULT_SCORE_FLOOR = 7;  // max points below top pick a diversity-promoted cluster can be
 
-/**
- * Haversine distance in miles between two lat/lon points.
- */
-function haversineMiles(lat1, lon1, lat2, lon2) {
-  const toRad = d => (d * Math.PI) / 180;
-  const dLat = toRad(lat2 - lat1);
-  const dLon = toRad(lon2 - lon1);
-  const a =
-    Math.sin(dLat / 2) ** 2 +
-    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
-  return 2 * EARTH_RADIUS_MI * Math.asin(Math.sqrt(a));
-}
+// Minimum miles between any two selected cluster centers.
+// 5 miles ensures picks are genuinely different parts of the wilderness,
+// not slight variations of the same loop from adjacent trailheads.
+const DEFAULT_MIN_DISTANCE_MI = 5;
+
+// Max points below the top pick's score that a diversity-promoted cluster
+// is allowed to be. Prevents promoting a mediocre cluster just because it's
+// geographically distant. Set to 7 based on observed score distributions
+// where the top 3 clusters typically span a 5-10 point range.
+const DEFAULT_SCORE_FLOOR = 7;
 
 /**
  * Load cluster data from JSON file.
+ * @param {string} path
+ * @returns {Promise<Array>}
  */
 async function loadClusters(path) {
   const raw = await fs.readFile(path, 'utf-8');
@@ -49,12 +41,10 @@ async function loadClusters(path) {
  * @param {number} [opts.count=3] — number of clusters to return
  * @param {number} [opts.minDistanceMi=5] — minimum miles between any two selected cluster centers
  * @param {number} [opts.scoreFloor=7] — max points below top pick's score a diversity-promoted
- *                                        cluster is allowed to be. If no geographically distinct
- *                                        cluster clears this bar, fewer than `count` picks are
- *                                        returned and `suggestionsComplete` is false.
+ *                                        cluster is allowed to be
  * @param {string} [opts.clusterPath] — path to clusters.json (default: cache/clusters.json)
  * @param {Array}  [opts.clusters] — pre-loaded cluster array (skips file read)
- * @returns {Promise<Object>} — { ranked, allScored, suggestionsComplete }
+ * @returns {Promise<{ ranked: Array, allScored: Array, suggestionsComplete: boolean }>}
  */
 export async function rankClusters(preferences, opts = {}) {
   const count = opts.count ?? DEFAULT_COUNT;
@@ -62,26 +52,22 @@ export async function rankClusters(preferences, opts = {}) {
   const scoreFloor = opts.scoreFloor ?? DEFAULT_SCORE_FLOOR;
   const clusters = opts.clusters ?? await loadClusters(opts.clusterPath ?? DEFAULT_CLUSTER_PATH);
 
-  // Score every cluster
   const scored = clusters.map((cluster, idx) => {
     const result = scoreCluster(cluster, preferences);
     return { ...cluster, _score: result.total, _breakdown: result.breakdown, _rankIdx: idx };
   });
 
-  // Sort by score descending (stable: ties broken by lower index = earlier in file)
+  // Sort descending; ties broken by lower index (earlier in file = stable sort)
   scored.sort((a, b) => b._score - a._score || a._rankIdx - b._rankIdx);
 
   const topScore = scored.length > 0 ? scored[0]._score : 0;
   const minAcceptableScore = topScore - scoreFloor;
 
-  // Geographic diversity filter with score floor:
-  // Walk sorted list, accept if >minDist from all accepted AND within scoreFloor of top.
+  // Walk sorted list: accept if >minDist from all accepted AND within scoreFloor of top.
   const accepted = [];
   for (const cluster of scored) {
     if (accepted.length >= count) break;
-
-    // Score floor: don't promote a cluster that's too far below the top pick
-    if (cluster._score < minAcceptableScore) break;  // sorted desc, so all remaining are worse
+    if (cluster._score < minAcceptableScore) break; // sorted desc, all remaining are worse
 
     const tooClose = accepted.some(acc =>
       haversineMiles(acc.centerLat, acc.centerLon, cluster.centerLat, cluster.centerLon) < minDist
@@ -109,7 +95,6 @@ if (process.argv[1]?.endsWith('rank-clusters.js')) {
     const topScore = allScored[0]?._score ?? 0;
     const minAcceptable = topScore - DEFAULT_SCORE_FLOOR;
 
-    // ── Top 10 by raw score (before diversity filter) ───────────────
     console.log('════════════════════════════════════════════════════════════════════════════════');
     console.log('  TOP 10 BY RAW SCORE (before diversity filter)');
     console.log(`  Score floor: ${minAcceptable} (top score ${topScore} minus ${DEFAULT_SCORE_FLOOR})`);
@@ -134,7 +119,6 @@ if (process.argv[1]?.endsWith('rank-clusters.js')) {
       );
     }
 
-    // ── Selected picks (after diversity filter + score floor) ────────
     console.log('\n\n════════════════════════════════════════════════════════════════════════════════');
     console.log(`  SELECTED PICKS (${DEFAULT_MIN_DISTANCE_MI}-mile diversity, ${DEFAULT_SCORE_FLOOR}-point score floor)`);
     console.log(`  suggestionsComplete: ${suggestionsComplete}`);
@@ -162,7 +146,6 @@ if (process.argv[1]?.endsWith('rank-clusters.js')) {
       if (c.peakNames.length) console.log(`  Peaks: ${c.peakNames.join(', ')}`);
       console.log(`  Breakdown: mileage=${b.mileageFit} elev=${b.elevationFit} scenery=${b.sceneryMatch} crowd=${b.crowdMatch} access=${b.accessibility} density=${b.featureDensity}`);
 
-      // Show distance from previous picks
       for (let j = 0; j < i; j++) {
         const other = ranked[j];
         const dist = haversineMiles(c.centerLat, c.centerLon, other.centerLat, other.centerLon);
@@ -175,13 +158,11 @@ if (process.argv[1]?.endsWith('rank-clusters.js')) {
       console.log('    Frontend should show: "' + ranked.length + ' strong match' + (ranked.length !== 1 ? 'es' : '') + ' for your preferences — try expanding your region or adjusting your preferences for more options."');
     }
 
-    // ── Diversity filter impact ─────────────────────────────────────
     console.log('\n\n════════════════════════════════════════════════════════════════════════════════');
     console.log('  DIVERSITY FILTER IMPACT');
     console.log('════════════════════════════════════════════════════════════════════════════════');
     const topRawRanks = ranked.map(r => allScored.indexOf(r) + 1);
 
-    // Show clusters that were in the score-eligible range but filtered by geography
     const eligible = allScored.filter(c => c._score >= minAcceptable);
     console.log(`  Score-eligible clusters (score >= ${minAcceptable}): ${eligible.length}`);
     console.log(`  Of those, accepted: ${ranked.length}, filtered by geography: ${eligible.length - ranked.length}`);
@@ -213,7 +194,6 @@ if (process.argv[1]?.endsWith('rank-clusters.js')) {
       }
     }
 
-    // Show clusters just below score floor that would have been geographically valid
     const belowFloor = allScored.filter(c => c._score < minAcceptable && c._score >= minAcceptable - 5);
     const nearMisses = belowFloor.filter(c => {
       return !ranked.some(acc =>
