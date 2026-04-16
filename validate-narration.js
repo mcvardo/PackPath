@@ -4,9 +4,20 @@
 // so mile-sum checks are verifying code correctness, not LLM arithmetic.
 //
 // Usage: import { validateNarration } from './validate-narration.js';
+//
+// @param {Array} narration — post-processed route array from postProcess()
+// @param {Object} structuredInput — the narration input fed to Claude
+// @param {Object} [regionConfig] — region config (e.g. from regions/ansel-adams.json)
+//                                  Used for the allowedNonFeatures allowlist.
 
-export function validateNarration(narration, structuredInput) {
+export function validateNarration(narration, structuredInput, regionConfig = {}) {
   const errors = [];
+
+  // Load region-specific non-feature proper nouns from config.
+  // These are real geographic names that appear in Sierra prose but aren't
+  // in the OSM point data (wilderness names, range names, river forks, etc.).
+  // Keeping this in region config means the validator stays region-agnostic.
+  const allowedNonFeatures = new Set(regionConfig.allowedNonFeatures || []);
 
   for (const route of narration) {
     const archetype = route.archetype;
@@ -43,11 +54,14 @@ export function validateNarration(narration, structuredInput) {
       }
     }
 
-    // (c) Every feature name referenced in day notes appears in input features
+    // (c) Feature hallucination detection
+    // Checks both multi-word title-case phrases AND single capitalized words
+    // that look like proper nouns but aren't in the feature/trail corpus.
     for (const seg of route.segments) {
       const note = seg.note;
+
+      // Multi-word title-case phrases (original check)
       const rawMatches = note.match(/[A-Z][a-z]+(?:\s+[A-Z][a-z]+)+/g) || [];
-      // Strip leading common verbs that aren't part of feature names
       const actionVerbs = new Set([
         'Depart', 'Descend', 'Ascend', 'Cross', 'Follow', 'Traverse', 'Continue',
         'Climb', 'Pass', 'Enter', 'Leave', 'Return', 'Navigate', 'Reach', 'Begin',
@@ -57,18 +71,9 @@ export function validateNarration(narration, structuredInput) {
         const words = m.split(/\s+/);
         while (words.length > 1 && actionVerbs.has(words[0])) words.shift();
         return words.join(' ');
-      }).filter(pf => pf.split(/\s+/).length >= 2); // still multi-word after stripping
-      const trailNameWords = new Set();
-      for (const tn of inputTrailNames) trailNameWords.add(tn);
+      }).filter(pf => pf.split(/\s+/).length >= 2);
 
-      const allowedNonFeatures = new Set([
-        'Ansel Adams', 'Middle Fork', 'San Joaquin', 'North Fork', 'East Fork',
-        'Sierra backpackers', 'Banner Peak', 'John Muir', 'Pacific Crest',
-        'Agnew Meadows', 'Silver Lake', 'June Lake',
-        // Regional geographic names not in OSM point data but real
-        'Sierra Crest', 'Sierra Nevada', 'High Sierra', 'Ritter Range',
-        'Minarets Wilderness', 'Ansel Adams Wilderness',
-      ]);
+      const trailNameWords = new Set(inputTrailNames);
 
       for (const pf of potentialFeatures) {
         if (inputFeatureNames.has(pf)) continue;
@@ -89,21 +94,51 @@ export function validateNarration(narration, structuredInput) {
           errors.push({ route: archetype, check: 'feature-hallucination', msg: `${prefix} Potential hallucinated feature "${pf}" in day note: "${note.slice(0, 60)}..."` });
         }
       }
+
+      // Single capitalized words that look like proper nouns (e.g. "Minarets", "Ritter")
+      // Common English words and direction words are excluded.
+      const commonWords = new Set([
+        'The', 'A', 'An', 'This', 'That', 'These', 'Those', 'It', 'Its',
+        'Day', 'Trail', 'Lake', 'Peak', 'Pass', 'Creek', 'River', 'Mountain',
+        'North', 'South', 'East', 'West', 'Upper', 'Lower', 'Middle', 'High',
+        'From', 'To', 'At', 'In', 'On', 'By', 'Via', 'Near', 'Along', 'Through',
+        'Start', 'End', 'Camp', 'Base', 'Loop', 'Route', 'Trailhead',
+        'Sierra', 'California', 'Wilderness', 'National', 'Forest', 'Park',
+        ...actionVerbs,
+      ]);
+      const singleCapWords = note.match(/\b[A-Z][a-z]{2,}\b/g) || [];
+      for (const word of singleCapWords) {
+        if (commonWords.has(word)) continue;
+        if (allowedNonFeatures.has(word)) continue;
+        // Check if this word appears in any known feature or trail name
+        let found = false;
+        for (const fn of inputFeatureNames) {
+          if (fn.includes(word)) { found = true; break; }
+        }
+        if (!found) {
+          for (const tn of inputTrailNames) {
+            if (tn.includes(word)) { found = true; break; }
+          }
+        }
+        if (!found) {
+          errors.push({ route: archetype, check: 'feature-hallucination-single', msg: `${prefix} Potential hallucinated proper noun "${word}" in day note: "${note.slice(0, 60)}..."` });
+        }
+      }
     }
 
-    // (d) Per-day miles sum to totalMiles within ±0.1 mi (deterministic — code computes this)
+    // (d) Per-day miles sum to totalMiles within ±0.3 mi
+    // (deterministic — code computes this, so a failure here is a code bug)
     const segMileSum = route.segments.reduce((sum, s) => sum + s.miles, 0);
     if (Math.abs(segMileSum - route.totalMiles) > 0.3) {
-      // Allow 0.3 for per-day rounding (up to 4 days × 0.05 rounding each = 0.2 + buffer)
       errors.push({ route: archetype, check: 'mile-sum', msg: `${prefix} Day miles sum to ${segMileSum.toFixed(1)}, expected ${route.totalMiles} (±0.3)` });
     }
 
-    // (e) totalMiles matches input totalMiles exactly (set from input, not computed)
+    // (e) totalMiles matches input totalMiles exactly
     if (route.totalMiles !== cluster.totalMiles) {
       errors.push({ route: archetype, check: 'total-miles', msg: `${prefix} totalMiles ${route.totalMiles} doesn't match input ${cluster.totalMiles}` });
     }
 
-    // (e2) Elevation: day-level gainFt sums must match route totalGainFt within ±50 ft
+    // (e2) Elevation: day-level gainFt/lossFt sums must match route totals within ±50 ft
     if (route.totalGainFt !== undefined && cluster.totalGainFt !== undefined) {
       const dayGainSum = route.segments.reduce((sum, s) => sum + (s.gainFt || 0), 0);
       if (Math.abs(dayGainSum - cluster.totalGainFt) > 50) {
@@ -132,11 +167,10 @@ export function validateNarration(narration, structuredInput) {
       }
     }
 
-    // (f3) Day note accuracy: mileage and elevation figures in notes must match that day's actual values
+    // (f3) Day note accuracy: mileage and elevation figures in notes must match that day
     for (const seg of route.segments) {
       const note = seg.note;
 
-      // Check mileage references: e.g. "16.6 miles", "10 mi", "15.7-mile"
       const mileRegex = /\b(\d+(?:\.\d+)?)\s*[-–—]?\s*mi(?:les?)?\b/gi;
       let mileMatch;
       while ((mileMatch = mileRegex.exec(note)) !== null) {
@@ -146,14 +180,12 @@ export function validateNarration(narration, structuredInput) {
         }
       }
 
-      // Check elevation references: e.g. "5,000 ft", "3000 ft", "2,500-ft"
       const elevRegex = /\b(\d{1,2},?\d{3})\s*[-–—']?\s*(?:ft|feet|foot)\b/gi;
       let elevMatch;
       while ((elevMatch = elevRegex.exec(note)) !== null) {
         const claimedElev = parseInt(elevMatch[1].replace(',', ''), 10);
         const dayGain = seg.gainFt || 0;
         const dayLoss = seg.lossFt || 0;
-        // The figure could refer to gain or loss — check both
         const closestMatch = Math.min(Math.abs(claimedElev - dayGain), Math.abs(claimedElev - dayLoss));
         if (closestMatch > 100) {
           errors.push({ route: archetype, check: 'note-elev-accuracy', msg: `${prefix} Day ${seg.day} note claims ${claimedElev} ft but day gain is ${dayGain} ft, loss is ${dayLoss} ft (tolerance ±100)` });
@@ -173,22 +205,22 @@ export function validateNarration(narration, structuredInput) {
     }
 
     // (h) Pros and cons: 1-2 sentences each, with specific references
+    // Requires a 3-word match (not just a bigram) to prevent false positives
+    // from common word pairs that happen to appear in feature names.
     const checkProCon = (items, label) => {
       for (const item of items) {
-        // Smart sentence split: don't split on decimal points (e.g. "3.7-mile")
         const sentences = item.split(/(?<!\d)[.!?]+(?!\d)/).filter(s => s.trim().length > 0);
         if (sentences.length > 2) {
           errors.push({ route: archetype, check: `${label}-length`, msg: `${prefix} ${label} has ${sentences.length} sentences (max 2): "${item.slice(0, 60)}..."` });
         }
         const hasFeatureRef = [...inputFeatureNames].some(fn => item.includes(fn));
         const hasTrailRef = [...inputTrailNames].some(tn => item.includes(tn));
-        // Also check if any feature/trail name word sequence appears in the item
+        // Require a 3-word match to avoid bigram false positives
         const hasPartialRef = !hasFeatureRef && !hasTrailRef && [...inputFeatureNames, ...inputTrailNames].some(name => {
-          // Check if at least 2 consecutive words from the name appear
           const words = name.split(/\s+/);
-          if (words.length < 2) return item.includes(name);
-          for (let i = 0; i < words.length - 1; i++) {
-            if (item.includes(words[i] + ' ' + words[i+1])) return true;
+          if (words.length < 3) return item.includes(name);
+          for (let i = 0; i < words.length - 2; i++) {
+            if (item.includes(words[i] + ' ' + words[i + 1] + ' ' + words[i + 2])) return true;
           }
           return false;
         });
@@ -201,13 +233,27 @@ export function validateNarration(narration, structuredInput) {
     checkProCon(route.pros, 'pro');
     checkProCon(route.cons, 'con');
 
-    // (i) All segment indices covered (no missing, no duplicates)
-    const allSegIds = route.segments.flatMap((s, dayIdx) => {
-      // We need to check against the raw Claude output, but we have the day structure
-      // The post-processor doesn't preserve raw segmentIds, so skip this check here
-      // It's enforced structurally by the post-processor
-      return [];
-    });
+    // (i) Segment coverage: every segment index must appear in exactly one day.
+    // Requires postProcess() to preserve segmentIds on each day entry.
+    // This is the most important correctness check — a missing segment means
+    // the route is incomplete and the grounding guarantee is broken.
+    if (route.segments.some(s => s.segmentIds)) {
+      const allAssignedIds = new Set();
+      let hasDuplicate = false;
+      for (const seg of route.segments) {
+        for (const id of (seg.segmentIds || [])) {
+          if (allAssignedIds.has(id)) hasDuplicate = true;
+          allAssignedIds.add(id);
+        }
+      }
+      const expectedCount = cluster.segments.length;
+      if (allAssignedIds.size !== expectedCount) {
+        errors.push({ route: archetype, check: 'segment-coverage', msg: `${prefix} ${allAssignedIds.size} of ${expectedCount} segments assigned — route may be incomplete` });
+      }
+      if (hasDuplicate) {
+        errors.push({ route: archetype, check: 'segment-duplicate', msg: `${prefix} Duplicate segment assignment detected — a segment appears in more than one day` });
+      }
+    }
 
     // (j) No banned AI-travel-writer words
     const BANNED_WORDS = ['nestled', 'pristine', 'dramatic', 'dramatically', 'breathtaking', 'stunning', 'spectacular', 'magnificent'];
