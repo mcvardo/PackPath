@@ -17,7 +17,13 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { rankClusters } from './rank-clusters.js';
 import { validateNarration } from './validate-narration.js';
-import { NarrationError, RegionConfigError, ValidationError } from './errors.js';
+import { NarrationError, RegionConfigError } from './errors.js';
+import {
+  assignArchetype,
+  buildNarrationInput,
+  buildPromptMarkdown,
+  postProcess,
+} from './pipeline-core.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -26,6 +32,7 @@ const API_KEY = process.env.ANTHROPIC_API_KEY;
 const MODEL = 'claude-sonnet-4-5-20250929';
 const API_URL = 'https://api.anthropic.com/v1/messages';
 const MAX_RETRIES = 2;
+const CLAUDE_TIMEOUT_MS = 120_000; // 2 minutes
 
 // Prevent concurrent pipeline runs — one Claude call at a time.
 // A queue would be better at scale but this is the right call for a single-user tool.
@@ -147,7 +154,6 @@ app.post('/api/routes', async (req, res) => {
 
     // Step 3: Build narration input
     send('progress', { step: 3, message: `Found ${ranked.length} candidate routes. Building itinerary…` });
-    const { buildNarrationInput, buildPromptMarkdown, assignArchetype } = await import('./pipeline-core.js');
     const structuredInput = buildNarrationInput(ranked, preferences, assignArchetype);
     const promptMd = buildPromptMarkdown(structuredInput);
 
@@ -184,7 +190,6 @@ app.post('/api/routes', async (req, res) => {
         throw new NarrationError('Claude returned unparseable JSON after all retries.');
       }
 
-      const { postProcess } = await import('./pipeline-core.js');
       try {
         finalOutput = postProcess(claudeOutput, structuredInput);
       } catch (err) {
@@ -253,35 +258,45 @@ function validatePreferences(prefs) {
 
 // ── Claude API call ───────────────────────────────────────────────────
 async function callClaude(messages, apiKey) {
-  const SYSTEM_PROMPT = await fs.readFile(
+  const systemPrompt = await fs.readFile(
     path.join(__dirname, 'narration-system-prompt.txt'), 'utf-8'
   ).catch(() => null);
 
-  const body = {
-    model: MODEL,
-    max_tokens: 8192,
-    messages,
-  };
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), CLAUDE_TIMEOUT_MS);
 
-  if (SYSTEM_PROMPT) body.system = SYSTEM_PROMPT;
+  try {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: 8192,
+        system: systemPrompt || undefined,
+        messages,
+      }),
+      signal: controller.signal,
+    });
 
-  const response = await fetch(API_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify(body),
-  });
+    if (!response.ok) {
+      const errText = await response.text();
+      throw new Error(`API ${response.status}: ${errText}`);
+    }
 
-  if (!response.ok) {
-    const errText = await response.text();
-    throw new Error(`API ${response.status}: ${errText}`);
+    const result = await response.json();
+    return result.content[0].text;
+  } catch (err) {
+    if (err.name === 'AbortError') {
+      throw new NarrationError(`Claude API timed out after ${CLAUDE_TIMEOUT_MS / 1000}s`);
+    }
+    throw err;
+  } finally {
+    clearTimeout(timeout);
   }
-
-  const result = await response.json();
-  return result.content[0].text;
 }
 
 // ── JSON extraction ───────────────────────────────────────────────────
