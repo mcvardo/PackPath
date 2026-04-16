@@ -1,0 +1,35 @@
+{
+  "name": "Ansel Adams Wilderness",
+  "bbox": {
+    "minLat": 37.55,
+    "minLon": -119.30,
+    "maxLat": 37.90,
+    "maxLon": -118.90
+  },
+  "seedTrail": "John Muir Trail",
+  "overpassQuery": "[out:json][timeout:180];(way[\"highway\"~\"path|footway\"][\"sac_scale\"](37.55,-119.30,37.90,-118.90);way[\"route\"=\"hiking\"](37.55,-119.30,37.90,-118.90);node[\"highway\"=\"trailhead\"](37.55,-119.30,37.90,-118.90);node[\"natural\"=\"peak\"](37.55,-119.30,37.90,-118.90);node[\"mountain_pass\"=\"yes\"](37.55,-119.30,37.90,-118.90);node[\"natural\"=\"saddle\"](37.55,-119.30,37.90,-118.90);node[\"natural\"=\"spring\"](37.55,-119.30,37.90,-118.90);node[\"natural\"=\"waterfall\"](37.55,-119.30,37.90,-118.90);way[\"natural\"=\"water\"](37.55,-119.30,37.90,-118.90);way[\"waterway\"~\"stream|river\"](37.55,-119.30,37.90,-118.90););out body;>;out skel qt;",
+  "allowedNonFeatures": [
+    "Ansel Adams",
+    "Middle Fork",
+    "San Joaquin",
+    "North Fork",
+    "East Fork",
+    "Sierra backpackers",
+    "Banner Peak",
+    "John Muir",
+    "Pacific Crest",
+    "Agnew Meadows",
+    "Silver Lake",
+    "June Lake",
+    "Sierra Crest",
+    "Sierra Nevada",
+    "High Sierra",
+    "Ritter Range",
+    "Minarets Wilderness",
+    "Ansel Adams Wilderness",
+    "Mount Ritter",
+    "Mount Davis",
+    "Mount Lyell",
+    "Thousand Island Lake"
+  ]
+}
