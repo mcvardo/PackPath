@@ -115,17 +115,17 @@ function setSubmitState(loading) {
   btn.textContent = loading ? 'Finding routes…' : 'Find routes';
 }
 
-// ── SSE pipeline ──────────────────────────────────────────────────────
-// Uses a proper line-buffer parser. SSE format is:
-//   event: <type>\n
-//   data: <json>\n
-//   \n
-// We accumulate lines until we hit a blank line (message boundary),
-// then extract event + data from the buffered block.
+// ── Polling pipeline ──────────────────────────────────────────────────
+// POST /api/routes returns { jobId } immediately.
+// We then poll GET /api/routes/:jobId every 2 seconds until done or failed.
+const POLL_INTERVAL_MS = 2000;
+const POLL_TIMEOUT_MS = 3 * 60 * 1000; // 3 minutes
+
 async function runPipeline(prefs) {
   showSection('progress');
   setSubmitState(true);
 
+  let jobId;
   try {
     const response = await fetch('/api/routes', {
       method: 'POST',
@@ -133,74 +133,74 @@ async function runPipeline(prefs) {
       body: JSON.stringify(prefs),
     });
 
+    const data = await response.json().catch(() => ({ error: response.statusText }));
+
     if (!response.ok) {
-      const data = await response.json().catch(() => ({ error: response.statusText }));
       showError(data.error || 'Server error. Check that ANTHROPIC_API_KEY is set.');
+      setSubmitState(false);
       return;
     }
 
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let rawBuffer = '';
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      rawBuffer += decoder.decode(value, { stream: true });
-      rawBuffer = processSSEBuffer(rawBuffer);
-    }
-
-    // Flush any remaining complete message in the buffer
-    processSSEBuffer(rawBuffer + '\n\n');
-
+    jobId = data.jobId;
   } catch (err) {
     showError('Connection error: ' + err.message);
+    setSubmitState(false);
+    return;
   }
-}
 
-// Processes all complete SSE messages in the buffer.
-// Returns the unconsumed remainder (incomplete message at the end).
-function processSSEBuffer(buffer) {
-  // SSE messages are separated by double newlines
-  const messages = buffer.split(/\n\n/);
-  // Last element is either empty or an incomplete message — keep it
-  const remainder = messages.pop();
+  // Poll until done, failed, or timeout
+  const deadline = Date.now() + POLL_TIMEOUT_MS;
+  let pollTimer = null;
 
-  for (const message of messages) {
-    if (!message.trim()) continue;
-    const lines = message.split('\n');
-    let eventType = 'message';
-    let dataLine = null;
-
-    for (const line of lines) {
-      if (line.startsWith('event: ')) {
-        eventType = line.slice(7).trim();
-      } else if (line.startsWith('data: ')) {
-        dataLine = line.slice(6);
-      }
-    }
-
-    if (dataLine !== null) {
-      try {
-        const payload = JSON.parse(dataLine);
-        handleSSEEvent(eventType, payload);
-      } catch (e) {
-        console.warn('SSE parse error:', e.message, 'data:', dataLine);
-      }
+  function stopPolling() {
+    if (pollTimer !== null) {
+      clearTimeout(pollTimer);
+      pollTimer = null;
     }
   }
 
-  return remainder;
-}
+  async function poll() {
+    if (Date.now() > deadline) {
+      showError('Route search timed out after 3 minutes. Please try again.');
+      setSubmitState(false);
+      return;
+    }
 
-function handleSSEEvent(type, payload) {
-  if (type === 'progress') {
-    setProgress(payload.step, payload.message);
-  } else if (type === 'result') {
-    renderResults(payload.routes);
-  } else if (type === 'error') {
-    showError(payload.message);
+    try {
+      const res = await fetch(`/api/routes/${jobId}`);
+      if (!res.ok) {
+        showError('Could not retrieve job status. Please try again.');
+        setSubmitState(false);
+        return;
+      }
+
+      const job = await res.json();
+      setProgress(job.step, job.message);
+
+      if (job.status === 'done') {
+        stopPolling();
+        renderResults(job.routes);
+        setSubmitState(false);
+        return;
+      }
+
+      if (job.status === 'failed') {
+        stopPolling();
+        showError(job.error || 'Route search failed. Please try again.');
+        setSubmitState(false);
+        return;
+      }
+
+      // Still queued or running — schedule next poll
+      pollTimer = setTimeout(poll, POLL_INTERVAL_MS);
+    } catch (err) {
+      showError('Connection error while polling: ' + err.message);
+      setSubmitState(false);
+    }
   }
+
+  // Kick off first poll after a short delay so the job has time to start
+  pollTimer = setTimeout(poll, POLL_INTERVAL_MS);
 }
 
 // ── Progress UI ───────────────────────────────────────────────────────
