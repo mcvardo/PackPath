@@ -39,7 +39,15 @@ const CLAUDE_TIMEOUT_MS = 120_000; // 2 minutes
 let pipelineRunning = false;
 
 const app = express();
-app.use(cors());
+const allowedOrigins = process.env.NODE_ENV === 'production'
+  ? [
+      'https://packpath.com',
+      'https://www.packpath.com',
+      /https:\/\/.*\.onrender\.com$/,
+    ]
+  : true; // allow all in dev
+
+app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
 
 // ── Serve static frontend ─────────────────────────────────────────────
