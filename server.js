@@ -4,8 +4,9 @@
 //
 // Routes:
 //   GET  /api/regions          — list available regions
-//   POST /api/routes           — run the pipeline with user preferences
+//   POST /api/routes           — create a background job, returns { jobId, status }
 //   GET  /api/routes/cached    — return the last validated output (no API cost)
+//   GET  /api/routes/:jobId    — poll job status and result
 //   GET  /                     — serve the frontend
 
 import 'dotenv/config';
@@ -15,6 +16,7 @@ import fs from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import crypto from 'node:crypto';
 import { rankClusters } from './rank-clusters.js';
 import { validateNarration } from './validate-narration.js';
 import { NarrationError, RegionConfigError } from './errors.js';
@@ -33,13 +35,54 @@ const MODEL = 'claude-sonnet-4-5-20250929';
 const API_URL = 'https://api.anthropic.com/v1/messages';
 const MAX_RETRIES = 2;
 const CLAUDE_TIMEOUT_MS = 120_000; // 2 minutes
+const JOB_TTL_MS = 60 * 60 * 1000; // 1 hour
 
-// Prevent concurrent pipeline runs — one Claude call at a time.
-// A queue would be better at scale but this is the right call for a single-user tool.
-let pipelineRunning = false;
+// ── In-memory job store ───────────────────────────────────────────────
+const jobs = new Map();
+
+// Periodically remove jobs older than JOB_TTL_MS to prevent memory leak.
+setInterval(() => {
+  const cutoff = Date.now() - JOB_TTL_MS;
+  for (const [id, job] of jobs) {
+    if (job.createdAt < cutoff) jobs.delete(id);
+  }
+}, 5 * 60 * 1000); // run every 5 minutes
+
+function createJob() {
+  const jobId = crypto.randomUUID();
+  const now = Date.now();
+  const job = {
+    jobId,
+    status: 'queued',
+    step: 0,
+    message: 'Queued',
+    routes: null,
+    error: null,
+    validated: false,
+    attempts: 0,
+    createdAt: now,
+    updatedAt: now,
+  };
+  jobs.set(jobId, job);
+  return job;
+}
+
+function updateJob(jobId, patch) {
+  const job = jobs.get(jobId);
+  if (!job) return;
+  Object.assign(job, patch, { updatedAt: Date.now() });
+}
 
 const app = express();
-app.use(cors());
+const allowedOrigins = process.env.NODE_ENV === 'production'
+  ? [
+      'https://packpath.com',
+      'https://www.packpath.com',
+      /https:\/\/.*\.onrender\.com$/,
+    ]
+  : true; // allow all in dev
+
+app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
 
 // ── Serve static frontend ─────────────────────────────────────────────
@@ -69,6 +112,8 @@ app.get('/api/regions', async (req, res) => {
 // ── GET /api/routes/cached ────────────────────────────────────────────
 // Returns the last validated output without calling Claude.
 // Useful for development and demos.
+// NOTE: This route must be defined before GET /api/routes/:jobId so Express
+// doesn't treat "cached" as a jobId.
 app.get('/api/routes/cached', async (req, res) => {
   const outputPath = path.join(__dirname, 'narration-output-real.json');
   if (!existsSync(outputPath)) {
@@ -87,42 +132,51 @@ app.get('/api/routes/cached', async (req, res) => {
 // ── POST /api/routes ──────────────────────────────────────────────────
 // Body: user preferences object (see user-preferences.example.json for schema)
 // Optional query param: ?region=ansel-adams (default: ansel-adams)
-app.post('/api/routes', async (req, res) => {
+// Returns immediately with { jobId, status: 'queued' }.
+// Poll GET /api/routes/:jobId for progress and results.
+app.post('/api/routes', (req, res) => {
   if (!API_KEY) {
     return res.status(500).json({
       error: 'ANTHROPIC_API_KEY environment variable not set on the server.'
     });
   }
 
-  if (pipelineRunning) {
-    return res.status(429).json({
-      error: 'A route search is already in progress. Please wait and try again.'
-    });
-  }
-
   const regionName = req.query.region || 'ansel-adams';
   const preferences = req.body;
 
-  // Basic preference validation
   const prefErrors = validatePreferences(preferences);
   if (prefErrors.length > 0) {
     return res.status(400).json({ error: 'Invalid preferences', details: prefErrors });
   }
 
-  // Set up SSE for progress streaming
-  res.setHeader('Content-Type', 'text/event-stream');
-  res.setHeader('Cache-Control', 'no-cache');
-  res.setHeader('Connection', 'keep-alive');
+  const job = createJob();
 
-  const send = (event, data) => {
-    res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
-  };
+  // Fire-and-forget — do NOT await
+  runPipeline(job.jobId, preferences, regionName).catch(err => {
+    // Catch any unexpected top-level error not already handled inside runPipeline
+    updateJob(job.jobId, {
+      status: 'failed',
+      error: err.message || 'Unknown error',
+    });
+  });
 
-  pipelineRunning = true;
+  res.json({ jobId: job.jobId, status: 'queued' });
+});
 
+// ── GET /api/routes/:jobId ────────────────────────────────────────────
+app.get('/api/routes/:jobId', (req, res) => {
+  const job = jobs.get(req.params.jobId);
+  if (!job) {
+    return res.status(404).json({ error: 'Job not found' });
+  }
+  res.json(job);
+});
+
+// ── Background pipeline ───────────────────────────────────────────────
+async function runPipeline(jobId, preferences, regionName) {
   try {
     // Step 0: Load region config
-    send('progress', { step: 0, message: 'Loading region data…' });
+    updateJob(jobId, { status: 'running', step: 0, message: 'Loading region data…' });
     let regionConfig;
     try {
       regionConfig = JSON.parse(
@@ -133,7 +187,7 @@ app.post('/api/routes', async (req, res) => {
     }
 
     // Step 1: Check cache
-    send('progress', { step: 1, message: 'Loading trail clusters…' });
+    updateJob(jobId, { step: 1, message: 'Loading trail clusters…' });
     const clusterPath = existsSync(path.join(__dirname, 'cache', `${regionName}-clusters.json`))
       ? path.join(__dirname, 'cache', `${regionName}-clusters.json`)
       : path.join(__dirname, 'cache', 'clusters.json');
@@ -145,20 +199,20 @@ app.post('/api/routes', async (req, res) => {
     }
 
     // Step 2: Rank clusters
-    send('progress', { step: 2, message: 'Scoring and ranking routes…' });
-    const { ranked, suggestionsComplete } = await rankClusters(preferences, { clusterPath });
+    updateJob(jobId, { step: 2, message: 'Scoring and ranking routes…' });
+    const { ranked } = await rankClusters(preferences, { clusterPath });
 
     if (ranked.length === 0) {
       throw new Error('No routes matched your preferences. Try adjusting mileage or elevation tolerance.');
     }
 
     // Step 3: Build narration input
-    send('progress', { step: 3, message: `Found ${ranked.length} candidate routes. Building itinerary…` });
+    updateJob(jobId, { step: 3, message: `Found ${ranked.length} candidate routes. Building itinerary…` });
     const structuredInput = buildNarrationInput(ranked, preferences, assignArchetype);
     const promptMd = buildPromptMarkdown(structuredInput);
 
-    // Step 4: Call Claude
-    send('progress', { step: 4, message: 'Generating route narration (this takes 15–30 seconds)…' });
+    // Step 4: Call Claude (with retry loop)
+    updateJob(jobId, { step: 4, message: 'Generating route narration (this takes 15–30 seconds)…' });
     const messages = [{ role: 'user', content: promptMd }];
     let attempt = 1;
     let finalOutput = null;
@@ -166,7 +220,7 @@ app.post('/api/routes', async (req, res) => {
 
     while (attempt <= MAX_RETRIES + 1) {
       if (attempt > 1) {
-        send('progress', { step: 4, message: `Fixing validation errors (attempt ${attempt})…` });
+        updateJob(jobId, { step: 4, message: `Fixing validation errors (attempt ${attempt})…` });
       }
 
       let responseText;
@@ -213,29 +267,30 @@ app.post('/api/routes', async (req, res) => {
       }
     }
 
-    // Step 5: Done
-    send('progress', { step: 5, message: 'Validating output…' });
+    // Step 5: Persist and mark done
+    updateJob(jobId, { step: 5, message: 'Validating output…' });
 
-    // Cache the output for /api/routes/cached
     await fs.writeFile(
       path.join(__dirname, 'narration-output-real.json'),
       JSON.stringify(finalOutput, null, 2)
     );
 
-    send('result', {
+    updateJob(jobId, {
+      status: 'done',
+      step: 5,
+      message: 'Done',
       routes: finalOutput,
       validated: validationResult?.ok ?? false,
       attempts: attempt,
     });
-
-    res.end();
   } catch (err) {
-    send('error', { message: err.message, type: err.name || 'Error' });
-    res.end();
-  } finally {
-    pipelineRunning = false;
+    updateJob(jobId, {
+      status: 'failed',
+      error: err.message || 'Unknown error',
+      message: `Failed: ${err.message}`,
+    });
   }
-});
+}
 
 // ── Preference validation ─────────────────────────────────────────────
 function validatePreferences(prefs) {
