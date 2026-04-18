@@ -1,25 +1,29 @@
 // useChat.js — AI conversation state management
-// Manages chat history, collected preferences, and readyToRun state.
+import { useState, useCallback, useRef } from 'react';
 
-import { useState, useCallback } from 'react';
+const INITIAL_MESSAGE = {
+  role: 'assistant',
+  content: "Hey! I'm PackPath. Tell me where you want to go and what kind of trip you're after — I'll find real routes from real trails.",
+};
 
 export function useChat() {
-  const [messages, setMessages] = useState([
-    {
-      role: 'assistant',
-      content: "Hey! I'm PackPath. Tell me where you want to go and what kind of trip you're after — I'll find real routes from real trails.",
-    },
-  ]);
+  const [messages, setMessages] = useState([INITIAL_MESSAGE]);
   const [collectedPrefs, setCollectedPrefs] = useState({});
   const [readyToRun, setReadyToRun] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Use refs to avoid stale closures in sendMessage without re-creating the callback
+  const messagesRef = useRef(messages);
+  const collectedPrefsRef = useRef(collectedPrefs);
+  messagesRef.current = messages;
+  collectedPrefsRef.current = collectedPrefs;
+
   const sendMessage = useCallback(async (text) => {
     if (!text.trim()) return;
 
     const userMessage = { role: 'user', content: text };
-    const nextMessages = [...messages, userMessage];
+    const nextMessages = [...messagesRef.current, userMessage];
     setMessages(nextMessages);
     setIsLoading(true);
     setError(null);
@@ -30,7 +34,7 @@ export function useChat() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           messages: nextMessages,
-          collectedPrefs,
+          collectedPrefs: collectedPrefsRef.current,
         }),
       });
 
@@ -52,13 +56,10 @@ export function useChat() {
     } finally {
       setIsLoading(false);
     }
-  }, [messages, collectedPrefs]);
+  }, []); // stable — uses refs internally
 
   const reset = useCallback(() => {
-    setMessages([{
-      role: 'assistant',
-      content: "Hey! I'm PackPath. Tell me where you want to go and what kind of trip you're after — I'll find real routes from real trails.",
-    }]);
+    setMessages([INITIAL_MESSAGE]);
     setCollectedPrefs({});
     setReadyToRun(false);
     setError(null);

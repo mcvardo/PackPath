@@ -279,7 +279,6 @@ app.get('/api/permits/:regionId', async (req, res) => {
             for (const [dateStr, status] of Object.entries(availability)) {
               const d = new Date(dateStr);
               if (d >= date) {
-                totalChecked++;
                 if (status === 'Available' || status === 'AVAILABLE') availableCount++;
               }
             }
@@ -557,6 +556,7 @@ app.post('/api/routes', (req, res) => {
     }
   }
 
+  applyPreferenceDefaults(preferences);
   const prefErrors = validatePreferences(preferences);
   if (prefErrors.length > 0) {
     log('warn', 'routes_validation_failed', { region: regionName, errors: prefErrors, prefs: preferences });
@@ -737,11 +737,11 @@ async function runPipeline(jobId, preferences, regionName) {
 }
 
 // ── Preference validation ─────────────────────────────────────────────
+// Returns errors array. Does NOT mutate prefs — caller applies defaults.
 function validatePreferences(prefs) {
   const errors = [];
   if (!prefs || typeof prefs !== 'object') return ['Request body must be a JSON object'];
 
-  // Accept either daysTarget directly, or compute from startDate + endDate
   const days = prefs.daysTarget;
   if (!days || days < 1 || days > 14) {
     errors.push(`daysTarget must be between 1 and 14 — got ${JSON.stringify(days)} (provide startDate + endDate or daysTarget directly)`);
@@ -752,10 +752,6 @@ function validatePreferences(prefs) {
   if (!['easy', 'moderate', 'hard'].includes(prefs.elevationTolerance)) {
     errors.push(`elevationTolerance must be easy, moderate, or hard — got ${JSON.stringify(prefs.elevationTolerance)}`);
   }
-  // sceneryPreferences: default to ['lakes'] if empty rather than hard-failing
-  if (!Array.isArray(prefs.sceneryPreferences) || prefs.sceneryPreferences.length === 0) {
-    prefs.sceneryPreferences = ['lakes', 'peaks'];
-  }
   if (prefs.startDate !== undefined && prefs.startDate !== null && prefs.startDate !== '') {
     const d = new Date(prefs.startDate);
     if (isNaN(d.getTime())) {
@@ -763,6 +759,13 @@ function validatePreferences(prefs) {
     }
   }
   return errors;
+}
+
+// Apply defaults to preferences before validation
+function applyPreferenceDefaults(prefs) {
+  if (!Array.isArray(prefs.sceneryPreferences) || prefs.sceneryPreferences.length === 0) {
+    prefs.sceneryPreferences = ['lakes', 'peaks'];
+  }
 }
 
 // ── Weather fetch ─────────────────────────────────────────────────────
@@ -916,11 +919,13 @@ function extractJSON(text) {
 app.post('/api/alerts', async (req, res) => {
   const { email, regionId, startDate, endDate } = req.body;
 
-  if (!email || !email.includes('@')) {
+  // Basic email validation
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return res.status(400).json({ error: 'Valid email required' });
   }
-  if (!regionId) {
-    return res.status(400).json({ error: 'regionId required' });
+  // Sanitize regionId — only allow safe slug characters
+  if (!regionId || !/^[a-z0-9-]+$/.test(regionId)) {
+    return res.status(400).json({ error: 'Valid regionId required' });
   }
 
   const registry = await loadPermitRegistry();

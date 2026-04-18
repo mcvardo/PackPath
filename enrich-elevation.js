@@ -7,7 +7,10 @@
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { buildGraph } from './build-graph.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function getRegionId() {
   const arg = process.argv.find(a => a.startsWith('--region='));
@@ -70,10 +73,10 @@ async function fetchElevationBatch(locations, retryCount = 0) {
 
 async function main() {
   const regionId = getRegionId();
-  const regionPath = path.join(import.meta.dirname, 'regions', `${regionId}.json`);
-  const osmCachePath = path.join(import.meta.dirname, 'cache', `${regionId}.json`);
-  const elevCachePath = path.join(import.meta.dirname, 'cache', `${regionId}-elevation.json`);
-  const graphCachePath = path.join(import.meta.dirname, 'cache', `${regionId}-graph.json`);
+  const regionPath = path.join(__dirname, 'regions', `${regionId}.json`);
+  const osmCachePath = path.join(__dirname, 'cache', `${regionId}.json`);
+  const elevCachePath = path.join(__dirname, 'cache', `${regionId}-elevation.json`);
+  const graphCachePath = path.join(__dirname, 'cache', `${regionId}-graph.json`);
 
   let regionConfig;
   try {

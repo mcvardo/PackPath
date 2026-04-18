@@ -79,9 +79,11 @@ export default function App() {
     return all.size;
   }, [routes]);
 
-  const regionId = collectedPrefs?.location
-    ? collectedPrefs.location.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
-    : null;
+  // regionId: prefer explicit regionId from chat prefs, fall back to slugifying location name
+  const regionId = collectedPrefs?.regionId ||
+    (collectedPrefs?.location
+      ? collectedPrefs.location.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+      : null);
   const startDate = collectedPrefs?.startDate || null;
   const regionLabel = collectedPrefs?.location || null;
 

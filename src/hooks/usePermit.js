@@ -6,13 +6,28 @@ export function usePermit(regionId, startDate) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!regionId) { setPermit(null); return; }
+    if (!regionId) {
+      setPermit(null);
+      return;
+    }
+
+    let cancelled = false;
     setLoading(true);
-    const params = startDate ? `?startDate=${startDate}` : '';
-    fetch(`/api/permits/${regionId}${params}`)
+
+    const params = startDate ? `?startDate=${encodeURIComponent(startDate)}` : '';
+    fetch(`/api/permits/${encodeURIComponent(regionId)}${params}`)
       .then(r => r.json())
-      .then(data => { setPermit(data); setLoading(false); })
-      .catch(() => setLoading(false));
+      .then(data => {
+        if (!cancelled) {
+          setPermit(data);
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => { cancelled = true; };
   }, [regionId, startDate]);
 
   return { permit, loading };

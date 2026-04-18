@@ -7,7 +7,10 @@
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { buildGraph } from './build-graph.js';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function getRegionId() {
   const arg = process.argv.find(a => a.startsWith('--region='));
@@ -26,10 +29,10 @@ const MAX_DEPTH = 40;
 async function main() {
   const t0 = Date.now();
   const regionId = getRegionId();
-  const regionPath = path.join(import.meta.dirname, 'regions', `${regionId}.json`);
-  const osmCachePath = path.join(import.meta.dirname, 'cache', `${regionId}.json`);
-  const elevCachePath = path.join(import.meta.dirname, 'cache', `${regionId}-elevation.json`);
-  const clusterOutPath = path.join(import.meta.dirname, 'cache', `${regionId}-clusters.json`);
+  const regionPath = path.join(__dirname, 'regions', `${regionId}.json`);
+  const osmCachePath = path.join(__dirname, 'cache', `${regionId}.json`);
+  const elevCachePath = path.join(__dirname, 'cache', `${regionId}-elevation.json`);
+  const clusterOutPath = path.join(__dirname, 'cache', `${regionId}-clusters.json`);
 
   let regionConfig;
   try {

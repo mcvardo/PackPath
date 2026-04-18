@@ -7,7 +7,9 @@
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
 
 function getRegionId() {
@@ -50,8 +52,8 @@ out skel qt;`.trim();
 
 async function fetchOverpass(regionId) {
   const id = regionId || getRegionId();
-  const regionPath = path.join(import.meta.dirname, 'regions', `${id}.json`);
-  const cachePath = path.join(import.meta.dirname, 'cache', `${id}.json`);
+  const regionPath = path.join(__dirname, 'regions', `${id}.json`);
+  const cachePath = path.join(__dirname, 'cache', `${id}.json`);
 
   let regionConfig;
   try {

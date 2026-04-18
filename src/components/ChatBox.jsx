@@ -7,7 +7,6 @@ import { COLORS, FONT_FAMILY } from '../styles/tokens.js';
 export function ChatBox({ messages, onSend, isLoading, readyToRun, onRunRoutes }) {
   const [input, setInput] = useState('');
   const bottomRef = useRef(null);
-  const inputRef = useRef(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -118,7 +117,6 @@ export function ChatBox({ messages, onSend, isLoading, readyToRun, onRunRoutes }
       {/* Input row */}
       <div style={{ display: 'flex', gap: 8 }}>
         <input
-          ref={inputRef}
           type="text"
           value={input}
           onChange={e => setInput(e.target.value)}

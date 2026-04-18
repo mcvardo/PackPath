@@ -42,8 +42,23 @@ export function useSavedTrips() {
       endDate: endDate || null,
       geoCenter: route.geoCenter || null,
       bestFor: route.bestFor,
-      // Store the full route for detail view
-      route,
+      // Store the full route for detail view — trimmed to essentials only
+      route: {
+        routeName: route.routeName,
+        archetype: route.archetype,
+        totalMiles: route.totalMiles,
+        totalGainFt: route.totalGainFt,
+        totalLossFt: route.totalLossFt,
+        days: route.days,
+        geoCenter: route.geoCenter,
+        summary: route.summary,
+        bestFor: route.bestFor,
+        pros: route.pros,
+        cons: route.cons,
+        gearTips: route.gearTips,
+        segments: route.segments,
+        // Omit weather — stale after a day anyway
+      },
     };
     setSavedTrips(prev => [trip, ...prev]);
     return trip.id;

@@ -40,10 +40,13 @@ async function checkPermitAvailability(permitId, startDate) {
     const endStr = `${year}-${month}-${String(endOfMonth.getDate()).padStart(2, '0')}`;
 
     const url = `https://www.recreation.gov/api/permitinyo/${permitId}/availabilityv2?start_date=${startOfMonth}&end_date=${endStr}&commercial_acct=false`;
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 10_000);
     const res = await fetch(url, {
       headers: { 'User-Agent': 'PackPath/1.0 permit-alert-checker' },
-      signal: AbortSignal.timeout(10_000),
+      signal: controller.signal,
     });
+    clearTimeout(timer);
     if (!res.ok) return null;
     const data = await res.json();
     const availability = data.payload || data;
