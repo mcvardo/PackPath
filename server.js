@@ -425,7 +425,8 @@ ${regions.filter(r => !r.ready).map(r => `- ${r.name}`).join('\n')}
 
 YOUR PERSONALITY:
 - You're like a knowledgeable friend who's done all these trails, not a form-filling bot
-- Ask one good question at a time, not a list of questions
+- Keep replies SHORT — 2-4 sentences max. No walls of text.
+- Ask one question at a time
 - Give real opinions: "Wind River Range in August is spectacular — probably the best backpacking in the lower 48"
 - Push back gently when something doesn't add up: "20 miles/day for 5 days is a serious undertaking — most people do 10-14. Are you an experienced ultralight hiker?"
 - Volunteer useful info they didn't ask for: "Grand Teton permits for the Teton Crest Trail book out in January — if you're planning for summer, you need to move fast"
@@ -457,14 +458,14 @@ REGION KNOWLEDGE:
 - Grand Canyon Backcountry (AZ): Iconic but brutal in summer. Best Mar-Apr, Oct-Nov. Very competitive permits.
 
 WHEN TO TRIGGER ROUTE SEARCH:
-When you have: location (ready region) + startDate + endDate + milesPerDayTarget, say something like:
-"Perfect — I have everything I need. Ready to find your routes?" and set readyToRun: true.
+When you have location + startDate + endDate + milesPerDayTarget, say:
+"Ready to find your routes?" and set ready to true in the JSON block below.
 
-IMPORTANT — append these hidden blocks at the very end of every reply (they get stripped before display):
-<!--PREFS:{"location":null,"startDate":null,"endDate":null,"milesPerDayTarget":null,"elevationTolerance":null,"sceneryPreferences":[],"crowdPreference":null,"experienceLevel":null,"groupType":null}-->
-<!--READY:false-->
+REPLY FORMAT — every reply must end with this exact block on its own line, no exceptions:
+<packpath>{"location":null,"startDate":null,"endDate":null,"milesPerDayTarget":null,"elevationTolerance":null,"sceneryPreferences":[],"crowdPreference":null,"experienceLevel":null,"groupType":null,"ready":false}</packpath>
 
-Replace null values with actual collected data. Set READY:true only when you have the minimum fields above.`;
+Fill in any values you've collected. Keep nulls for unknown fields. Set ready:true only when you have location + startDate + endDate + milesPerDayTarget.
+The <packpath> block is stripped before showing the user — never reference it in your reply.`;
 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 30_000);
@@ -498,31 +499,31 @@ Replace null values with actual collected data. Set READY:true only when you hav
       clearTimeout(timeout);
     }
 
-    // Extract hidden data blocks
-    const prefsMatch = responseText.match(/<!--PREFS:(.*?)-->/s);
-    const readyMatch = responseText.match(/<!--READY:(true|false)-->/);
+    // Extract structured data block — format: <packpath>{...}</packpath>
+    const dataMatch = responseText.match(/<packpath>([\s\S]*?)<\/packpath>/);
 
     let newPrefs = { ...collectedPrefs };
-    if (prefsMatch) {
+    let readyToRun = false;
+
+    if (dataMatch) {
       try {
-        const extracted = JSON.parse(prefsMatch[1]);
-        // Merge — only overwrite with non-null values
+        const extracted = JSON.parse(dataMatch[1].trim());
+        readyToRun = extracted.ready === true;
+        delete extracted.ready;
+        // Merge — only overwrite with non-null, non-empty values
         for (const [k, v] of Object.entries(extracted)) {
-          if (v !== null && v !== undefined && v !== '') {
+          if (v !== null && v !== undefined && v !== '' && !(Array.isArray(v) && v.length === 0)) {
             newPrefs[k] = v;
           }
         }
-      } catch {
-        // ignore parse errors
+      } catch (e) {
+        log('warn', 'chat_prefs_parse_failed', { raw: dataMatch[1].slice(0, 100) });
       }
     }
 
-    const readyToRun = readyMatch ? readyMatch[1] === 'true' : false;
-
-    // Strip hidden blocks from the reply shown to the user
+    // Strip the data block from the reply shown to the user
     const cleanReply = responseText
-      .replace(/<!--PREFS:.*?-->/gs, '')
-      .replace(/<!--READY:(true|false)-->/g, '')
+      .replace(/<packpath>[\s\S]*?<\/packpath>/g, '')
       .trim();
 
     res.json({ reply: cleanReply, collectedPrefs: newPrefs, readyToRun });
