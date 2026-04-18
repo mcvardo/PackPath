@@ -34,7 +34,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT || 3000;
 const API_KEY = process.env.ANTHROPIC_API_KEY;
 const SENTRY_DSN = process.env.SENTRY_DSN;
-const MODEL = 'claude-sonnet-4-5-20250929';
+const MODEL = 'claude-sonnet-4-5';
 const API_URL = 'https://api.anthropic.com/v1/messages';
 const MAX_RETRIES = 2;
 const CLAUDE_TIMEOUT_MS = 120_000;
@@ -182,11 +182,10 @@ async function loadAllRegions() {
   const files = await fs.readdir(regionsDir);
   const regions = await Promise.all(
     files
-      .filter(f => f.endsWith('.json'))
+      .filter(f => f.endsWith('.json') && f !== 'permit-registry.json')
       .map(async f => {
         const config = JSON.parse(await fs.readFile(path.join(regionsDir, f), 'utf-8'));
         const id = f.replace('.json', '');
-        // Check for cluster cache — support both <id>-clusters.json and legacy clusters.json
         const hasCache =
           existsSync(path.join(__dirname, 'cache', `${id}-clusters.json`)) ||
           (id === 'ansel-adams' && existsSync(path.join(__dirname, 'cache', 'clusters.json')));
@@ -522,6 +521,7 @@ depending on whether you have enough info to run the route search.`;
 
     res.json({ reply: cleanReply, collectedPrefs: newPrefs, readyToRun });
   } catch (err) {
+    log('error', 'chat_failed', { error: err.message });
     res.status(500).json({ error: err.message });
   }
 });

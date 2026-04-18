@@ -47,7 +47,7 @@ export function useChat() {
       setError(err.message);
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: "Sorry, I hit a snag. Try again or fill in your preferences below.",
+        content: `Something went wrong: ${err.message}. Try again or fill in your preferences below.`,
       }]);
     } finally {
       setIsLoading(false);
