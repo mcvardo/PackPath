@@ -301,7 +301,107 @@ app.get('/api/permits/:regionId', async (req, res) => {
   res.json(result);
 });
 
-// ── POST /api/chat ────────────────────────────────────────────────────
+// ── GET /api/available-now ────────────────────────────────────────────
+// Returns regions with permit availability for the next 2 weekends.
+app.get('/api/available-now', async (req, res) => {
+  const registry = await loadPermitRegistry();
+  const regions = await loadAllRegions();
+  const readyRegions = regions.filter(r => r.ready);
+
+  // Next two weekends
+  const today = new Date();
+  const weekends = [];
+  for (let i = 0; i < 14; i++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() + i);
+    if (d.getDay() === 6) { // Saturday
+      weekends.push(d.toISOString().split('T')[0]);
+      if (weekends.length >= 2) break;
+    }
+  }
+
+  const results = await Promise.allSettled(
+    readyRegions.map(async (region) => {
+      const info = registry[region.id];
+      if (!info) return null;
+
+      // No permit = always available
+      if (!info.permitRequired) {
+        return {
+          regionId: region.id,
+          regionName: region.name,
+          available: true,
+          permitRequired: false,
+          isLottery: false,
+          bookingUrl: null,
+          bestMonths: info.bestMonths,
+          weekends,
+        };
+      }
+
+      // Lottery = not bookable on demand
+      if (info.isLottery) return null;
+
+      // Check live availability for first weekend
+      if (!info.permitId || !weekends[0]) return null;
+
+      try {
+        const date = new Date(weekends[0]);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const startOfMonth = `${year}-${month}-01`;
+        const endOfMonth = new Date(year, date.getMonth() + 1, 0);
+        const endStr = `${year}-${month}-${String(endOfMonth.getDate()).padStart(2, '0')}`;
+
+        const url = `https://www.recreation.gov/api/permitinyo/${info.permitId}/availabilityv2?start_date=${startOfMonth}&end_date=${endStr}&commercial_acct=false`;
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 6_000);
+
+        try {
+          const response = await fetch(url, {
+            headers: { 'User-Agent': 'PackPath/1.0' },
+            signal: controller.signal,
+          });
+          if (!response.ok) return null;
+          const data = await response.json();
+          const availability = data.payload || data;
+
+          let available = false;
+          for (const weekend of weekends) {
+            const status = availability[`${weekend}T00:00:00Z`] || availability[weekend];
+            if (status === 'Available' || status === 'AVAILABLE') {
+              available = true;
+              break;
+            }
+          }
+
+          if (!available) return null;
+
+          return {
+            regionId: region.id,
+            regionName: region.name,
+            available: true,
+            permitRequired: true,
+            isLottery: false,
+            bookingUrl: info.bookingUrl,
+            bestMonths: info.bestMonths,
+            weekends,
+          };
+        } finally {
+          clearTimeout(timeout);
+        }
+      } catch {
+        return null;
+      }
+    })
+  );
+
+  const available = results
+    .filter(r => r.status === 'fulfilled' && r.value !== null)
+    .map(r => r.value);
+
+  res.json({ available, weekends });
+});
 // Conversational AI endpoint to collect trip preferences naturally.
 // Body: { messages: [{role, content}], collectedPrefs: {} }
 // Returns: { reply: string, collectedPrefs: {}, readyToRun: bool }

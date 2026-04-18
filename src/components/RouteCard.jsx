@@ -10,7 +10,7 @@ import { usePermit } from '../hooks/usePermit.js';
  * Route summary card shown in the picker view.
  * Clicking opens the full route detail.
  */
-export function RouteCard({ route, onClick, regionId, startDate }) {
+export function RouteCard({ route, onClick, regionId, startDate, onSave, isSaved }) {
   const [hover, setHover] = useState(false);
   const { permit } = usePermit(regionId, startDate);
 
@@ -65,12 +65,36 @@ export function RouteCard({ route, onClick, regionId, startDate }) {
         marginTop: 12,
         display: 'flex',
         alignItems: 'center',
-        gap: 6,
-        fontSize: 13,
-        color: COLORS.emerald600,
-        fontWeight: 600,
+        justifyContent: 'space-between',
       }}>
-        View itinerary <span style={{ fontSize: 16 }}>→</span>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 6,
+          fontSize: 13,
+          color: COLORS.emerald600,
+          fontWeight: 600,
+        }}>
+          View itinerary <span style={{ fontSize: 16 }}>→</span>
+        </div>
+        {onSave && (
+          <button
+            onClick={e => { e.stopPropagation(); onSave(route); }}
+            style={{
+              padding: '4px 10px',
+              borderRadius: 6,
+              fontSize: 12,
+              fontWeight: 600,
+              background: isSaved ? COLORS.emerald100 : COLORS.stone100,
+              color: isSaved ? COLORS.emerald700 : COLORS.stone500,
+              border: `1px solid ${isSaved ? COLORS.emerald200 : COLORS.stone200}`,
+              cursor: 'pointer',
+              fontFamily: 'inherit',
+            }}
+          >
+            {isSaved ? '✓ Saved' : '+ Save'}
+          </button>
+        )}
       </div>
     </button>
   );

@@ -2,10 +2,13 @@ import { useState, useMemo } from 'react';
 import { COLORS, FONT_FAMILY } from './styles/tokens.js';
 import { useRoutes } from './hooks/useRoutes.js';
 import { useChat } from './hooks/useChat.js';
+import { useSavedTrips } from './hooks/useSavedTrips.js';
 import { ChatBox } from './components/ChatBox.jsx';
 import { RouteCard } from './components/RouteCard.jsx';
 import { RouteDetail } from './components/RouteDetail.jsx';
 import { PreferenceForm } from './components/PreferenceForm.jsx';
+import { SavedTrips } from './components/SavedTrips.jsx';
+import { AvailableNow } from './components/AvailableNow.jsx';
 
 const STEP_LABELS = [
   'Load region',
@@ -21,6 +24,7 @@ export default function App() {
 
   const { routes, status, step, message, error, findRoutes, reset } = useRoutes();
   const { messages, collectedPrefs, readyToRun, isLoading: chatLoading, sendMessage } = useChat();
+  const { savedTrips, saveTrip, removeTrip, isSaved } = useSavedTrips();
 
   const handleFindRoutes = async (prefs) => {
     setSelectedRoute(null);
@@ -37,6 +41,31 @@ export default function App() {
     }
     if (prefs.location) prefs.region = prefs.location;
     handleFindRoutes(prefs);
+  };
+
+  const handleSaveRoute = (route) => {
+    saveTrip(route, regionId, startDate, collectedPrefs?.endDate || null);
+  };
+
+  const handleAvailableNowSelect = (region) => {
+    // Pre-fill the form with the selected region and next weekend's dates
+    const weekend = region.weekends?.[0];
+    const endWeekend = region.weekends?.[0]
+      ? new Date(new Date(region.weekends[0]).getTime() + 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+      : null;
+    handleFindRoutes({
+      region: region.regionId,
+      location: region.regionName,
+      startDate: weekend || '',
+      endDate: endWeekend || '',
+      daysTarget: 3,
+      milesPerDayTarget: 10,
+      elevationTolerance: 'moderate',
+      sceneryPreferences: ['lakes', 'peaks'],
+      crowdPreference: 'mixed',
+      experienceLevel: 'intermediate',
+      groupType: 'couple',
+    });
   };
 
   const totalFeatures = useMemo(() => {
@@ -110,6 +139,16 @@ export default function App() {
 
       {!selectedRoute && (
         <>
+          {/* ── Saved Trips ── */}
+          <SavedTrips
+            trips={savedTrips}
+            onRemove={removeTrip}
+            onView={(trip) => setSelectedRoute(trip.route)}
+          />
+
+          {/* ── Available this weekend ── */}
+          <AvailableNow onSelect={handleAvailableNowSelect} />
+
           {/* ── AI Chat ── */}
           <div style={{ marginBottom: 20 }}>
             <p style={{
@@ -216,7 +255,15 @@ export default function App() {
 
           {/* ── Route cards ── */}
           {routes?.map((route, i) => (
-            <RouteCard key={i} route={route} onClick={() => setSelectedRoute(route)} regionId={regionId} startDate={startDate} />
+            <RouteCard
+              key={i}
+              route={route}
+              onClick={() => setSelectedRoute(route)}
+              regionId={regionId}
+              startDate={startDate}
+              onSave={handleSaveRoute}
+              isSaved={isSaved(route.routeName)}
+            />
           ))}
         </>
       )}
