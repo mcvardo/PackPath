@@ -6,6 +6,7 @@ import { DayCard } from './DayCard.jsx';
 import { MapView } from './MapView.jsx';
 import { WeatherPanel } from './WeatherPanel.jsx';
 import { PermitBadge } from './PermitBadge.jsx';
+import { PermitAlert } from './PermitAlert.jsx';
 import { usePermit } from '../hooks/usePermit.js';
 
 /**
@@ -75,6 +76,14 @@ export function RouteDetail({ route, onBack, regionId, startDate }) {
             Permits & Planning
           </h4>
           <PermitBadge permit={permit} size="lg" />
+          {permit.permitRequired && !permit.isLottery && (
+            <PermitAlert
+              regionId={regionId}
+              permitName={permit.permitName}
+              startDate={startDate}
+              endDate={null}
+            />
+          )}
         </div>
       )}
 

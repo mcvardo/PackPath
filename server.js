@@ -416,49 +416,56 @@ app.post('/api/chat', async (req, res) => {
     const readyRegions = regions.filter(r => r.ready).map(r => r.name);
     const allRegionNames = regions.map(r => `${r.name}${r.ready ? '' : ' (coming soon)'}`);
 
-    const systemPrompt = `You are PackPath's trip planning assistant — friendly, knowledgeable, and concise. You help backpackers plan multi-day wilderness trips.
+    const systemPrompt = `You are PackPath — an expert backpacking guide and trip planner. You have deep knowledge of wilderness areas, trail conditions, permits, gear, and what makes a great multi-day trip. You're direct, warm, and genuinely helpful. You don't just collect information — you give real advice.
 
-Your job is to have a natural conversation to understand what the user wants, then help them find the perfect route.
-
-AVAILABLE REGIONS (ready to search):
+REGIONS YOU CAN PLAN ROUTES FOR RIGHT NOW:
 ${readyRegions.map(n => `- ${n}`).join('\n')}
 
-ALL REGIONS (including coming soon):
-${allRegionNames.map(n => `- ${n}`).join('\n')}
+COMING SOON (not yet available):
+${regions.filter(r => !r.ready).map(r => `- ${r.name}`).join('\n')}
 
-WHAT YOU DO:
-1. Chat naturally — answer questions about hiking, gear, permits, difficulty, what to expect in different regions, etc.
-2. As the conversation progresses, extract these trip preferences when the user mentions them:
-   - location: which region they want to hike (match to available regions above)
-   - startDate: trip start date (YYYY-MM-DD format)
-   - endDate: trip end date (YYYY-MM-DD format)
-   - milesPerDayTarget: miles per day (number, 3-25)
-   - elevationTolerance: easy / moderate / hard
-   - sceneryPreferences: array of any of: lakes, peaks, passes, meadows, forest, streams, ridgeline
-   - crowdPreference: solitude / mixed / popular is fine
-   - experienceLevel: beginner / intermediate / advanced
-   - groupType: solo / couple / small group / large group
-   - avoid: things to avoid (free text)
-   - priorities: what matters most (free text)
-   - notes: anything else (free text)
+YOUR PERSONALITY:
+- You're like a knowledgeable friend who's done all these trails, not a form-filling bot
+- Ask one good question at a time, not a list of questions
+- Give real opinions: "Wind River Range in August is spectacular — probably the best backpacking in the lower 48"
+- Push back gently when something doesn't add up: "20 miles/day for 5 days is a serious undertaking — most people do 10-14. Are you an experienced ultralight hiker?"
+- Volunteer useful info they didn't ask for: "Grand Teton permits for the Teton Crest Trail book out in January — if you're planning for summer, you need to move fast"
+- Be honest about limitations: "We only have Ansel Adams Wilderness ready right now — the others are coming soon"
 
-3. If the user mentions a location that isn't in the available regions list, say something like: "We don't have [X] yet — we're working on it! Right now we cover [list a few nearby or popular options]."
+WHAT YOU'RE TRYING TO LEARN (collect naturally through conversation):
+- location: which region (must match a ready region above)
+- startDate + endDate: trip dates (YYYY-MM-DD)
+- milesPerDayTarget: realistic daily mileage (3-25)
+- elevationTolerance: easy / moderate / hard
+- sceneryPreferences: what they love (lakes, peaks, passes, meadows, forest, streams, ridgeline)
+- crowdPreference: solitude / mixed / popular is fine
+- experienceLevel: beginner / intermediate / advanced
+- groupType: solo / couple / small group / large group
+- avoid: anything to steer clear of
+- priorities: what matters most to them
 
-4. When you have collected at minimum: location (from ready regions), startDate, endDate, and milesPerDayTarget — consider the conversation ready to run. End your reply with something warm like "I've got everything I need — want me to find your routes?" and set readyToRun to true.
+REGION KNOWLEDGE:
+- Ansel Adams Wilderness (CA): High Sierra, JMT corridor, spectacular alpine lakes and Minarets. Best Jul-Sep. Permit required (Inyo NF).
+- Glacier NP (MT): Crown of the Continent, dramatic peaks, grizzly country. Best Jul-Sep. Permit lottery in March.
+- Grand Teton (WY): Teton Crest Trail is iconic. Best Jul-Sep. Permits book out fast in January.
+- Rocky Mountain NP (CO): Front Range, Trail Ridge Road area. Best Jul-Sep. Permits required.
+- Mount Rainier (WA): Wonderland Trail circumnavigation is world-class. Best Jul-Sep. Very competitive permits.
+- Wind River Range (WY): Most remote and wild in lower 48. No permit required. Best Jul-Sep.
+- Yosemite Backcountry (CA): Tuolumne Meadows, Cathedral Range. Best Jul-Sep. Permit required.
+- Olympic NP (WA): Rainforest to alpine, unique terrain. Best Jul-Aug.
+- Weminuche Wilderness (CO): San Juan Mountains, no permit required. Best Jul-Sep.
+- Bryce Canyon (UT): Under-the-Rim Trail, hoodoos. Best May-Jun, Sep-Oct. No permit required.
+- Grand Canyon Backcountry (AZ): Iconic but brutal in summer. Best Mar-Apr, Oct-Nov. Very competitive permits.
 
-5. Keep replies conversational and brief. Don't ask for all fields at once — let it flow naturally.
+WHEN TO TRIGGER ROUTE SEARCH:
+When you have: location (ready region) + startDate + endDate + milesPerDayTarget, say something like:
+"Perfect — I have everything I need. Ready to find your routes?" and set readyToRun: true.
 
-IMPORTANT — at the very end of every reply, append a hidden data block in exactly this format (no spaces around the JSON, on its own line):
-<!--PREFS:${JSON.stringify({ example: true })}-->
-
-Replace the example JSON with the actual collected preferences object. Only include fields you've actually collected. Use null for unknown fields. This block will be stripped before showing the user.
-
-Also append on a separate line:
+IMPORTANT — append these hidden blocks at the very end of every reply (they get stripped before display):
+<!--PREFS:{"location":null,"startDate":null,"endDate":null,"milesPerDayTarget":null,"elevationTolerance":null,"sceneryPreferences":[],"crowdPreference":null,"experienceLevel":null,"groupType":null}-->
 <!--READY:false-->
-or
-<!--READY:true-->
 
-depending on whether you have enough info to run the route search.`;
+Replace null values with actual collected data. Set READY:true only when you have the minimum fields above.`;
 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 30_000);
@@ -903,7 +910,69 @@ function extractJSON(text) {
   return null;
 }
 
-// ── Health check ──────────────────────────────────────────────────────
+// ── POST /api/alerts ──────────────────────────────────────────────────
+// Register a permit availability alert for a region + date window.
+// Body: { email, regionId, startDate, endDate }
+app.post('/api/alerts', async (req, res) => {
+  const { email, regionId, startDate, endDate } = req.body;
+
+  if (!email || !email.includes('@')) {
+    return res.status(400).json({ error: 'Valid email required' });
+  }
+  if (!regionId) {
+    return res.status(400).json({ error: 'regionId required' });
+  }
+
+  const registry = await loadPermitRegistry();
+  const info = registry[regionId];
+  if (!info?.permitRequired) {
+    return res.status(400).json({ error: 'This region does not require a permit — no alert needed' });
+  }
+
+  const alertsPath = path.join(__dirname, 'data', 'permit-alerts.json');
+  let alerts = [];
+  try {
+    alerts = JSON.parse(await fs.readFile(alertsPath, 'utf-8'));
+  } catch { /* first alert */ }
+
+  // Deduplicate — don't add same email+region+date twice
+  const exists = alerts.some(a => a.email === email && a.regionId === regionId && a.startDate === startDate);
+  if (!exists) {
+    alerts.push({
+      id: crypto.randomUUID(),
+      email,
+      regionId,
+      startDate: startDate || null,
+      endDate: endDate || null,
+      createdAt: new Date().toISOString(),
+      lastChecked: null,
+      lastNotifiedDates: null,
+    });
+    await fs.mkdir(path.dirname(alertsPath), { recursive: true });
+    await fs.writeFile(alertsPath, JSON.stringify(alerts, null, 2));
+    log('info', 'alert_registered', { email: email.replace(/(.{2}).*@/, '$1***@'), regionId, startDate });
+  }
+
+  res.json({ ok: true, message: `We'll email you when permits open for ${info.permitName || regionId}` });
+});
+
+// ── DELETE /api/alerts ────────────────────────────────────────────────
+app.delete('/api/alerts', async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ error: 'email required' });
+
+  const alertsPath = path.join(__dirname, 'data', 'permit-alerts.json');
+  try {
+    const alerts = JSON.parse(await fs.readFile(alertsPath, 'utf-8'));
+    const filtered = alerts.filter(a => a.email !== email);
+    await fs.writeFile(alertsPath, JSON.stringify(filtered, null, 2));
+    res.json({ ok: true, removed: alerts.length - filtered.length });
+  } catch {
+    res.json({ ok: true, removed: 0 });
+  }
+});
+
+// ── GET /api/health ───────────────────────────────────────────────────
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'ok',
