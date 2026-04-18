@@ -34,7 +34,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT || 3000;
 const API_KEY = process.env.ANTHROPIC_API_KEY;
 const SENTRY_DSN = process.env.SENTRY_DSN;
-const MODEL = 'claude-sonnet-4-5';
+const MODEL = process.env.NARRATION_MODEL || 'claude-haiku-4-5';
 const API_URL = 'https://api.anthropic.com/v1/messages';
 const MAX_RETRIES = 2;
 const CLAUDE_TIMEOUT_MS = 120_000;
@@ -142,17 +142,17 @@ const chatLimiter = rateLimit({
 // Route generation: 10 searches per hour per IP (each costs ~$0.08)
 const routesLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
-  max: 10,
+  max: 50,
   standardHeaders: true,
   legacyHeaders: false,
-  message: { error: 'Route search limit reached (10/hour). Try again later.' },
+  message: { error: 'Route search limit reached. Try again later.' },
   skip: () => process.env.NODE_ENV !== 'production',
 });
 
 // General API: 200 requests per 15 minutes per IP
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 200,
+  max: 500,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many requests. Please slow down.' },
@@ -882,7 +882,7 @@ async function callClaude(messages, apiKey) {
       },
       body: JSON.stringify({
         model: MODEL,
-        max_tokens: 8192,
+        max_tokens: 4096,
         system: systemPrompt || undefined,
         messages,
       }),

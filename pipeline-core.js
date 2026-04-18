@@ -47,7 +47,7 @@ export function buildNarrationInput(rankedClusters, preferences, archetypeFn = a
         fromJunction: seg.fromJunction,
         toJunction: seg.toJunction,
         midpoint: seg.midpoint,
-        coords: seg.coords || [],
+        // coords omitted from narration prompt — Claude doesn't need geometry to write prose
         peaks: seg.peaks,
         passes: seg.passes,
         lakes: seg.lakes,
