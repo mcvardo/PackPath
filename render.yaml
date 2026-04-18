@@ -3,13 +3,22 @@ services:
     name: packpath-api
     runtime: node
     plan: free
-    buildCommand: npm install
+    buildCommand: npm install && npm run build
     startCommand: npm start
     envVars:
       - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: SENTRY_DSN
         sync: false
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 3000
-    healthCheckPath: /api/regions
+    healthCheckPath: /api/health
+    headers:
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+      - path: /
+        name: Cache-Control
+        value: no-cache, no-store, must-revalidate

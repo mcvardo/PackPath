@@ -10,8 +10,10 @@
 //   GET  /                     — serve the frontend
 
 import 'dotenv/config';
+import * as Sentry from '@sentry/node';
 import express from 'express';
 import cors from 'cors';
+import rateLimit from 'express-rate-limit';
 import fs from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import path from 'node:path';
@@ -31,11 +33,21 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const PORT = process.env.PORT || 3000;
 const API_KEY = process.env.ANTHROPIC_API_KEY;
+const SENTRY_DSN = process.env.SENTRY_DSN;
 const MODEL = 'claude-sonnet-4-5-20250929';
 const API_URL = 'https://api.anthropic.com/v1/messages';
 const MAX_RETRIES = 2;
 const CLAUDE_TIMEOUT_MS = 120_000;
 const JOB_TTL_MS = 60 * 60 * 1000;
+
+// ── Sentry ────────────────────────────────────────────────────────────
+if (SENTRY_DSN) {
+  Sentry.init({
+    dsn: SENTRY_DSN,
+    environment: process.env.NODE_ENV || 'development',
+    tracesSampleRate: 0.2,
+  });
+}
 
 // ── Structured logger ─────────────────────────────────────────────────
 function log(level, event, data = {}) {
@@ -116,8 +128,53 @@ app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
 app.use(requestLogger);
 
-// ── Serve static frontend ─────────────────────────────────────────────
-app.use(express.static(path.join(__dirname, 'public')));
+// ── Rate limiting ─────────────────────────────────────────────────────
+// Chat: 30 messages per 10 minutes per IP
+const chatLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many chat messages. Please wait a few minutes.' },
+  skip: () => process.env.NODE_ENV !== 'production',
+});
+
+// Route generation: 10 searches per hour per IP (each costs ~$0.08)
+const routesLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Route search limit reached (10/hour). Try again later.' },
+  skip: () => process.env.NODE_ENV !== 'production',
+});
+
+// General API: 200 requests per 15 minutes per IP
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 200,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests. Please slow down.' },
+  skip: () => process.env.NODE_ENV !== 'production',
+});
+
+app.use('/api/', apiLimiter);
+app.use('/api/chat', chatLimiter);
+app.use('/api/routes', routesLimiter);
+
+// ── Serve static frontend with CDN-friendly cache headers ─────────────
+// Hashed assets (JS/CSS bundles) get 1 year cache — safe because filenames change on rebuild
+// HTML gets no-cache so users always get the latest shell
+app.use(express.static(path.join(__dirname, 'public'), {
+  setHeaders(res, filePath) {
+    if (filePath.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    } else if (filePath.match(/\.(js|css|woff2?|png|jpg|svg|ico)$/)) {
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    }
+  },
+}));
 
 // ── Load all region configs at startup ───────────────────────────────
 async function loadAllRegions() {
@@ -563,6 +620,7 @@ async function runPipeline(jobId, preferences, regionName) {
     log('info', 'pipeline_done', { jobId, region: regionName, routes: finalOutputWithWeather.length, attempts: attempt, validated: validationResult?.ok });
   } catch (err) {
     log('error', 'pipeline_failed', { jobId, region: regionName, error: err.message, type: err.constructor.name });
+    if (SENTRY_DSN) Sentry.captureException(err, { extra: { jobId, region: regionName } });
     updateJob(jobId, {
       status: 'failed',
       error: err.message || 'Unknown error',
@@ -745,7 +803,29 @@ function extractJSON(text) {
   return null;
 }
 
+// ── Health check ──────────────────────────────────────────────────────
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    ts: new Date().toISOString(),
+    apiKey: API_KEY ? 'set' : 'missing',
+    sentry: SENTRY_DSN ? 'configured' : 'not configured',
+    uptime: Math.round(process.uptime()),
+  });
+});
+
+// ── Sentry error handler (must be last) ───────────────────────────────
+if (SENTRY_DSN) {
+  app.use(Sentry.expressErrorHandler());
+}
+
+// ── Global error handler ──────────────────────────────────────────────
+app.use((err, req, res, _next) => {
+  log('error', 'unhandled_express_error', { path: req.path, error: err.message });
+  res.status(500).json({ error: 'Internal server error' });
+});
+
 // ── Start ─────────────────────────────────────────────────────────────
 app.listen(PORT, () => {
-  log('info', 'server_start', { port: PORT, apiKey: API_KEY ? 'set' : 'MISSING', model: MODEL });
+  log('info', 'server_start', { port: PORT, apiKey: API_KEY ? 'set' : 'MISSING', sentry: SENTRY_DSN ? 'enabled' : 'disabled', model: MODEL });
 });
