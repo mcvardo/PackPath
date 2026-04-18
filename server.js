@@ -37,6 +37,37 @@ const MAX_RETRIES = 2;
 const CLAUDE_TIMEOUT_MS = 120_000;
 const JOB_TTL_MS = 60 * 60 * 1000;
 
+// ── Structured logger ─────────────────────────────────────────────────
+function log(level, event, data = {}) {
+  const entry = {
+    ts: new Date().toISOString(),
+    level,
+    event,
+    ...data,
+  };
+  const line = JSON.stringify(entry);
+  if (level === 'error') {
+    console.error(line);
+  } else {
+    console.log(line);
+  }
+}
+
+// Request logger middleware
+function requestLogger(req, res, next) {
+  const start = Date.now();
+  res.on('finish', () => {
+    log('info', 'http_request', {
+      method: req.method,
+      path: req.path,
+      status: res.statusCode,
+      ms: Date.now() - start,
+      ip: req.ip,
+    });
+  });
+  next();
+}
+
 // ── In-memory job store ───────────────────────────────────────────────
 const jobs = new Map();
 
@@ -83,6 +114,7 @@ const allowedOrigins = process.env.NODE_ENV === 'production'
 
 app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
+app.use(requestLogger);
 
 // ── Serve static frontend ─────────────────────────────────────────────
 app.use(express.static(path.join(__dirname, 'public')));
@@ -340,6 +372,7 @@ depending on whether you have enough info to run the route search.`;
 // ── POST /api/routes ──────────────────────────────────────────────────
 app.post('/api/routes', (req, res) => {
   if (!API_KEY) {
+    log('error', 'routes_no_api_key');
     return res.status(500).json({
       error: 'ANTHROPIC_API_KEY environment variable not set on the server.'
     });
@@ -362,12 +395,15 @@ app.post('/api/routes', (req, res) => {
 
   const prefErrors = validatePreferences(preferences);
   if (prefErrors.length > 0) {
+    log('warn', 'routes_validation_failed', { region: regionName, errors: prefErrors, prefs: preferences });
     return res.status(400).json({ error: 'Invalid preferences', details: prefErrors });
   }
 
   const job = createJob();
+  log('info', 'routes_job_created', { jobId: job.jobId, region: regionName, days: preferences.daysTarget, miles: preferences.milesPerDayTarget });
 
   runPipeline(job.jobId, preferences, regionName).catch(err => {
+    log('error', 'routes_pipeline_uncaught', { jobId: job.jobId, error: err.message });
     updateJob(job.jobId, {
       status: 'failed',
       error: err.message || 'Unknown error',
@@ -390,6 +426,7 @@ app.get('/api/routes/:jobId', (req, res) => {
 async function runPipeline(jobId, preferences, regionName) {
   try {
     updateJob(jobId, { status: 'running', step: 0, message: 'Loading region data…' });
+    log('info', 'pipeline_start', { jobId, region: regionName });
 
     // Find region by name or id
     const regions = await loadAllRegions();
@@ -401,10 +438,12 @@ async function runPipeline(jobId, preferences, regionName) {
 
     if (!regionMatch) {
       const available = regions.filter(r => r.ready).map(r => r.name).join(', ');
+      log('warn', 'pipeline_region_not_found', { jobId, region: regionName });
       throw new RegionConfigError(`Region "${regionName}" not found. Available regions: ${available}`);
     }
 
     if (!regionMatch.ready) {
+      log('warn', 'pipeline_region_not_ready', { jobId, region: regionMatch.name });
       throw new RegionConfigError(`Region "${regionMatch.name}" is coming soon — cluster data not yet available.`);
     }
 
@@ -521,7 +560,9 @@ async function runPipeline(jobId, preferences, regionName) {
       validated: validationResult?.ok ?? false,
       attempts: attempt,
     });
+    log('info', 'pipeline_done', { jobId, region: regionName, routes: finalOutputWithWeather.length, attempts: attempt, validated: validationResult?.ok });
   } catch (err) {
+    log('error', 'pipeline_failed', { jobId, region: regionName, error: err.message, type: err.constructor.name });
     updateJob(jobId, {
       status: 'failed',
       error: err.message || 'Unknown error',
@@ -538,21 +579,22 @@ function validatePreferences(prefs) {
   // Accept either daysTarget directly, or compute from startDate + endDate
   const days = prefs.daysTarget;
   if (!days || days < 1 || days > 14) {
-    errors.push('daysTarget must be between 1 and 14 (or provide startDate + endDate)');
+    errors.push(`daysTarget must be between 1 and 14 — got ${JSON.stringify(days)} (provide startDate + endDate or daysTarget directly)`);
   }
   if (!prefs.milesPerDayTarget || prefs.milesPerDayTarget < 3 || prefs.milesPerDayTarget > 25) {
-    errors.push('milesPerDayTarget must be between 3 and 25');
+    errors.push(`milesPerDayTarget must be between 3 and 25 — got ${JSON.stringify(prefs.milesPerDayTarget)}`);
   }
   if (!['easy', 'moderate', 'hard'].includes(prefs.elevationTolerance)) {
-    errors.push('elevationTolerance must be easy, moderate, or hard');
+    errors.push(`elevationTolerance must be easy, moderate, or hard — got ${JSON.stringify(prefs.elevationTolerance)}`);
   }
+  // sceneryPreferences: default to ['lakes'] if empty rather than hard-failing
   if (!Array.isArray(prefs.sceneryPreferences) || prefs.sceneryPreferences.length === 0) {
-    errors.push('sceneryPreferences must be a non-empty array');
+    prefs.sceneryPreferences = ['lakes', 'peaks'];
   }
   if (prefs.startDate !== undefined && prefs.startDate !== null && prefs.startDate !== '') {
     const d = new Date(prefs.startDate);
     if (isNaN(d.getTime())) {
-      errors.push('startDate must be a valid ISO date string (YYYY-MM-DD)');
+      errors.push(`startDate must be a valid ISO date string (YYYY-MM-DD) — got ${JSON.stringify(prefs.startDate)}`);
     }
   }
   return errors;
@@ -705,6 +747,5 @@ function extractJSON(text) {
 
 // ── Start ─────────────────────────────────────────────────────────────
 app.listen(PORT, () => {
-  console.log(`PackPath server running at http://localhost:${PORT}`);
-  console.log(`API key: ${API_KEY ? 'set ✓' : 'NOT SET — set ANTHROPIC_API_KEY to run the pipeline'}`);
+  log('info', 'server_start', { port: PORT, apiKey: API_KEY ? 'set' : 'MISSING', model: MODEL });
 });

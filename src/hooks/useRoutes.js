@@ -101,7 +101,11 @@ export function useRoutes() {
 
       if (!res.ok) {
         setStatus('failed');
-        setError(data.error ?? 'Failed to start route search.');
+        // Show validation details if present, otherwise fall back to generic error
+        const msg = data.details?.length
+          ? `Invalid preferences: ${data.details.join(', ')}`
+          : (data.error ?? 'Failed to start route search.');
+        setError(msg);
         return;
       }
 
