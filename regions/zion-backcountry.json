@@ -1,0 +1,10 @@
+{
+  "name": "Zion National Park Backcountry",
+  "bbox": { "minLat": 37.10, "minLon": -113.20, "maxLat": 37.50, "maxLon": -112.80 },
+  "seedTrail": "West Rim Trail",
+  "allowedNonFeatures": [
+    "Zion", "Virgin River", "Kolob", "Dixie National Forest",
+    "West Rim Trail", "Narrows", "Angels Landing", "Subway",
+    "La Verkin Creek", "Hop Valley"
+  ]
+}

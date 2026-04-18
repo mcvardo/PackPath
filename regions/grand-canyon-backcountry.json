@@ -1,0 +1,10 @@
+{
+  "name": "Grand Canyon National Park Backcountry",
+  "bbox": { "minLat": 35.90, "minLon": -112.40, "maxLat": 36.40, "maxLon": -111.80 },
+  "seedTrail": "Bright Angel Trail",
+  "allowedNonFeatures": [
+    "Grand Canyon", "Colorado River", "Kaibab", "Tonto Platform",
+    "Bright Angel", "North Rim", "South Rim", "Havasupai",
+    "Phantom Ranch", "Ribbon Falls", "Clear Creek"
+  ]
+}

@@ -1,77 +1,86 @@
 // fetch-overpass.js
 // Pulls trail, trailhead, water, and feature data from OpenStreetMap
-// for a bounding box covering the Ansel Adams Wilderness.
+// for a bounding box defined in the region config.
 //
-// Caches the response to disk so we don't hammer the public Overpass instance
-// while iterating on the parser.
+// Usage: node fetch-overpass.js [--region=<id>]
+// Default region: ansel-adams
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
-const CACHE_PATH = path.join(import.meta.dirname, 'cache', 'ansel-adams.json');
 const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
 
-// Bounding box: (south, west, north, east)
-// Covers Ansel Adams Wilderness + a buffer for trailheads on the edges.
-// Includes Mammoth Lakes / Devils Postpile area to the east and
-// the Ritter Range / Thousand Island Lake area in the core.
-const BBOX = '37.55,-119.30,37.90,-118.90';
+function getRegionId() {
+  const arg = process.argv.find(a => a.startsWith('--region='));
+  return arg ? arg.split('=')[1] : 'ansel-adams';
+}
 
-const QUERY = `
-[out:json][timeout:90];
+function buildQuery(bbox) {
+  return `[out:json][timeout:180];
 (
-  // Named hiking trails and paths
-  way["highway"="path"]["name"](${BBOX});
-  way["highway"="footway"]["name"](${BBOX});
-  way["highway"="path"]["sac_scale"](${BBOX});
-  way["route"="hiking"](${BBOX});
+  way["highway"="path"]["name"](${bbox});
+  way["highway"="footway"]["name"](${bbox});
+  way["highway"="path"]["sac_scale"](${bbox});
+  way["route"="hiking"](${bbox});
 
-  // Trailheads (multiple tagging conventions in the wild)
-  node["highway"="trailhead"](${BBOX});
-  node["information"="trailhead"](${BBOX});
-  node["amenity"="parking"]["hiking"="yes"](${BBOX});
+  node["highway"="trailhead"](${bbox});
+  node["information"="trailhead"](${bbox});
+  node["amenity"="parking"]["hiking"="yes"](${bbox});
 
-  // Water features
-  node["natural"="spring"](${BBOX});
-  way["waterway"="stream"](${BBOX});
-  way["waterway"="river"](${BBOX});
-  way["natural"="water"](${BBOX});
+  node["natural"="spring"](${bbox});
+  way["waterway"="stream"](${bbox});
+  way["waterway"="river"](${bbox});
+  way["natural"="water"](${bbox});
 
-  // Named features for scenery and navigation
-  node["natural"="peak"]["name"](${BBOX});
-  node["natural"="saddle"](${BBOX});
-  node["mountain_pass"="yes"](${BBOX});
-  node["natural"="waterfall"](${BBOX});
-  node["natural"="cliff"]["name"](${BBOX});
-  node["tourism"="attraction"]["name"](${BBOX});
-  node["tourism"="viewpoint"](${BBOX});
-  node["historic"]["name"](${BBOX});
-  node["geological"]["name"](${BBOX});
-  node["place"="locality"]["name"](${BBOX});
+  node["natural"="peak"]["name"](${bbox});
+  node["natural"="saddle"](${bbox});
+  node["mountain_pass"="yes"](${bbox});
+  node["natural"="waterfall"](${bbox});
+  node["natural"="cliff"]["name"](${bbox});
+  node["tourism"="attraction"]["name"](${bbox});
+  node["tourism"="viewpoint"](${bbox});
+  node["historic"]["name"](${bbox});
+  node["geological"]["name"](${bbox});
+  node["place"="locality"]["name"](${bbox});
 );
 out body;
 >;
-out skel qt;
-`.trim();
+out skel qt;`.trim();
+}
 
-async function fetchOverpass() {
+async function fetchOverpass(regionId) {
+  const id = regionId || getRegionId();
+  const regionPath = path.join(import.meta.dirname, 'regions', `${id}.json`);
+  const cachePath = path.join(import.meta.dirname, 'cache', `${id}.json`);
+
+  let regionConfig;
+  try {
+    regionConfig = JSON.parse(await fs.readFile(regionPath, 'utf-8'));
+  } catch {
+    throw new Error(`Region config not found: ${regionPath}`);
+  }
+
+  const { bbox: b } = regionConfig;
+  const bbox = `${b.minLat},${b.minLon},${b.maxLat},${b.maxLon}`;
+  const query = regionConfig.overpassQuery || buildQuery(bbox);
+
   // Use cache if it exists
   try {
-    const cached = await fs.readFile(CACHE_PATH, 'utf-8');
-    console.log(`Using cached response from ${CACHE_PATH}`);
+    const cached = await fs.readFile(cachePath, 'utf-8');
+    console.log(`Using cached response from ${cachePath}`);
     return JSON.parse(cached);
   } catch {
     // not cached, fetch fresh
   }
 
-  console.log('Fetching from Overpass API...');
-  console.log(`Bounding box: ${BBOX}`);
+  console.log(`Fetching OSM data for region: ${regionConfig.name}`);
+  console.log(`Bounding box: ${bbox}`);
   const start = Date.now();
 
   const res = await fetch(OVERPASS_URL, {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: `data=${encodeURIComponent(QUERY)}`,
+    body: `data=${encodeURIComponent(query)}`,
   });
 
   if (!res.ok) {
@@ -83,9 +92,9 @@ async function fetchOverpass() {
   const elapsed = ((Date.now() - start) / 1000).toFixed(1);
   console.log(`Got response in ${elapsed}s — ${data.elements.length} elements`);
 
-  await fs.mkdir(path.dirname(CACHE_PATH), { recursive: true });
-  await fs.writeFile(CACHE_PATH, JSON.stringify(data));
-  console.log(`Cached to ${CACHE_PATH}`);
+  await fs.mkdir(path.dirname(cachePath), { recursive: true });
+  await fs.writeFile(cachePath, JSON.stringify(data));
+  console.log(`Cached to ${cachePath}`);
 
   return data;
 }

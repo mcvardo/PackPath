@@ -1,0 +1,10 @@
+{
+  "name": "John Muir Wilderness",
+  "bbox": { "minLat": 36.90, "minLon": -119.00, "maxLat": 37.55, "maxLon": -118.40 },
+  "seedTrail": "John Muir Trail",
+  "allowedNonFeatures": [
+    "John Muir", "Sierra Nevada", "High Sierra", "Kings Canyon", "Sequoia",
+    "Inyo National Forest", "Pacific Crest Trail", "Evolution Valley",
+    "Bishop Pass", "Kearsarge Pass", "Piute Pass", "Humphreys Basin"
+  ]
+}

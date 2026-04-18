@@ -1,0 +1,10 @@
+{
+  "name": "Adirondack High Peaks",
+  "bbox": { "minLat": 44.00, "minLon": -74.20, "maxLat": 44.50, "maxLon": -73.70 },
+  "seedTrail": "Northville-Placid Trail",
+  "allowedNonFeatures": [
+    "Adirondack", "High Peaks", "Lake Placid", "Adirondack Park",
+    "Northville-Placid Trail", "Mount Marcy", "Algonquin Peak",
+    "Heart Lake", "Johns Brook", "Ausable Lakes"
+  ]
+}

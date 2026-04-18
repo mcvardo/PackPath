@@ -1,0 +1,10 @@
+{
+  "name": "Desolation Wilderness",
+  "bbox": { "minLat": 38.80, "minLon": -120.30, "maxLat": 39.10, "maxLon": -120.00 },
+  "seedTrail": "Pacific Crest Trail",
+  "allowedNonFeatures": [
+    "Desolation Wilderness", "Lake Tahoe", "Sierra Nevada",
+    "Eldorado National Forest", "Pacific Crest Trail", "Tahoe Rim Trail",
+    "Echo Lakes", "Aloha Lake", "Velma Lakes"
+  ]
+}

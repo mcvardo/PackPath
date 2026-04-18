@@ -1,0 +1,10 @@
+{
+  "name": "Glacier National Park",
+  "bbox": { "minLat": 48.20, "minLon": -114.50, "maxLat": 49.00, "maxLon": -113.20 },
+  "seedTrail": "Continental Divide Trail",
+  "allowedNonFeatures": [
+    "Glacier", "Continental Divide", "Going-to-the-Sun", "Waterton",
+    "Crown of the Continent", "Blackfeet", "Flathead", "Many Glacier",
+    "Two Medicine", "Logan Pass", "Highline Trail"
+  ]
+}

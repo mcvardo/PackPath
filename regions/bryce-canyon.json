@@ -1,0 +1,10 @@
+{
+  "name": "Bryce Canyon National Park",
+  "bbox": { "minLat": 37.45, "minLon": -112.30, "maxLat": 37.75, "maxLon": -112.00 },
+  "seedTrail": "Under-the-Rim Trail",
+  "allowedNonFeatures": [
+    "Bryce Canyon", "Paunsaugunt Plateau", "Dixie National Forest",
+    "Under-the-Rim Trail", "Fairyland", "Bryce Amphitheater",
+    "Rainbow Point", "Yovimpa Point"
+  ]
+}

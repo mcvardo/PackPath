@@ -4,6 +4,7 @@
 //
 // Routes:
 //   GET  /api/regions          — list available regions
+//   POST /api/chat             — AI conversation to collect trip preferences
 //   POST /api/routes           — create a background job, returns { jobId, status }
 //   GET  /api/routes/:jobId    — poll job status and result
 //   GET  /                     — serve the frontend
@@ -33,19 +34,18 @@ const API_KEY = process.env.ANTHROPIC_API_KEY;
 const MODEL = 'claude-sonnet-4-5-20250929';
 const API_URL = 'https://api.anthropic.com/v1/messages';
 const MAX_RETRIES = 2;
-const CLAUDE_TIMEOUT_MS = 120_000; // 2 minutes
-const JOB_TTL_MS = 60 * 60 * 1000; // 1 hour
+const CLAUDE_TIMEOUT_MS = 120_000;
+const JOB_TTL_MS = 60 * 60 * 1000;
 
 // ── In-memory job store ───────────────────────────────────────────────
 const jobs = new Map();
 
-// Periodically remove jobs older than JOB_TTL_MS to prevent memory leak.
 setInterval(() => {
   const cutoff = Date.now() - JOB_TTL_MS;
   for (const [id, job] of jobs) {
     if (job.createdAt < cutoff) jobs.delete(id);
   }
-}, 5 * 60 * 1000); // run every 5 minutes
+}, 5 * 60 * 1000);
 
 function createJob() {
   const jobId = crypto.randomUUID();
@@ -79,7 +79,7 @@ const allowedOrigins = process.env.NODE_ENV === 'production'
       'https://www.packpath.com',
       /https:\/\/.*\.onrender\.com$/,
     ]
-  : true; // allow all in dev
+  : true;
 
 app.use(cors({ origin: allowedOrigins }));
 app.use(express.json());
@@ -87,32 +87,162 @@ app.use(express.json());
 // ── Serve static frontend ─────────────────────────────────────────────
 app.use(express.static(path.join(__dirname, 'public')));
 
+// ── Load all region configs at startup ───────────────────────────────
+async function loadAllRegions() {
+  const regionsDir = path.join(__dirname, 'regions');
+  const files = await fs.readdir(regionsDir);
+  const regions = await Promise.all(
+    files
+      .filter(f => f.endsWith('.json'))
+      .map(async f => {
+        const config = JSON.parse(await fs.readFile(path.join(regionsDir, f), 'utf-8'));
+        const id = f.replace('.json', '');
+        // Check for cluster cache — support both <id>-clusters.json and legacy clusters.json
+        const hasCache =
+          existsSync(path.join(__dirname, 'cache', `${id}-clusters.json`)) ||
+          (id === 'ansel-adams' && existsSync(path.join(__dirname, 'cache', 'clusters.json')));
+        return { id, name: config.name, ready: hasCache };
+      })
+  );
+  return regions.sort((a, b) => a.name.localeCompare(b.name));
+}
+
 // ── GET /api/regions ──────────────────────────────────────────────────
 app.get('/api/regions', async (req, res) => {
   try {
-    const files = await fs.readdir(path.join(__dirname, 'regions'));
-    const regions = await Promise.all(
-      files
-        .filter(f => f.endsWith('.json'))
-        .map(async f => {
-          const config = JSON.parse(await fs.readFile(path.join(__dirname, 'regions', f), 'utf-8'));
-          const id = f.replace('.json', '');
-          const hasCache = existsSync(path.join(__dirname, 'cache', `${id}-clusters.json`)) ||
-                           existsSync(path.join(__dirname, 'cache', 'clusters.json'));
-          return { id, name: config.name, ready: hasCache };
-        })
-    );
+    const regions = await loadAllRegions();
     res.json({ regions });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
+// ── POST /api/chat ────────────────────────────────────────────────────
+// Conversational AI endpoint to collect trip preferences naturally.
+// Body: { messages: [{role, content}], collectedPrefs: {} }
+// Returns: { reply: string, collectedPrefs: {}, readyToRun: bool }
+app.post('/api/chat', async (req, res) => {
+  if (!API_KEY) {
+    return res.status(500).json({ error: 'ANTHROPIC_API_KEY not set on the server.' });
+  }
+
+  const { messages = [], collectedPrefs = {} } = req.body;
+
+  try {
+    const regions = await loadAllRegions();
+    const readyRegions = regions.filter(r => r.ready).map(r => r.name);
+    const allRegionNames = regions.map(r => `${r.name}${r.ready ? '' : ' (coming soon)'}`);
+
+    const systemPrompt = `You are PackPath's trip planning assistant — friendly, knowledgeable, and concise. You help backpackers plan multi-day wilderness trips.
+
+Your job is to have a natural conversation to understand what the user wants, then help them find the perfect route.
+
+AVAILABLE REGIONS (ready to search):
+${readyRegions.map(n => `- ${n}`).join('\n')}
+
+ALL REGIONS (including coming soon):
+${allRegionNames.map(n => `- ${n}`).join('\n')}
+
+WHAT YOU DO:
+1. Chat naturally — answer questions about hiking, gear, permits, difficulty, what to expect in different regions, etc.
+2. As the conversation progresses, extract these trip preferences when the user mentions them:
+   - location: which region they want to hike (match to available regions above)
+   - startDate: trip start date (YYYY-MM-DD format)
+   - endDate: trip end date (YYYY-MM-DD format)
+   - milesPerDayTarget: miles per day (number, 3-25)
+   - elevationTolerance: easy / moderate / hard
+   - sceneryPreferences: array of any of: lakes, peaks, passes, meadows, forest, streams, ridgeline
+   - crowdPreference: solitude / mixed / popular is fine
+   - experienceLevel: beginner / intermediate / advanced
+   - groupType: solo / couple / small group / large group
+   - avoid: things to avoid (free text)
+   - priorities: what matters most (free text)
+   - notes: anything else (free text)
+
+3. If the user mentions a location that isn't in the available regions list, say something like: "We don't have [X] yet — we're working on it! Right now we cover [list a few nearby or popular options]."
+
+4. When you have collected at minimum: location (from ready regions), startDate, endDate, and milesPerDayTarget — consider the conversation ready to run. End your reply with something warm like "I've got everything I need — want me to find your routes?" and set readyToRun to true.
+
+5. Keep replies conversational and brief. Don't ask for all fields at once — let it flow naturally.
+
+IMPORTANT — at the very end of every reply, append a hidden data block in exactly this format (no spaces around the JSON, on its own line):
+<!--PREFS:${JSON.stringify({ example: true })}-->
+
+Replace the example JSON with the actual collected preferences object. Only include fields you've actually collected. Use null for unknown fields. This block will be stripped before showing the user.
+
+Also append on a separate line:
+<!--READY:false-->
+or
+<!--READY:true-->
+
+depending on whether you have enough info to run the route search.`;
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30_000);
+
+    let responseText;
+    try {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': API_KEY,
+          'anthropic-version': '2023-06-01',
+        },
+        body: JSON.stringify({
+          model: MODEL,
+          max_tokens: 1024,
+          system: systemPrompt,
+          messages,
+        }),
+        signal: controller.signal,
+      });
+
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(`API ${response.status}: ${errText}`);
+      }
+
+      const result = await response.json();
+      responseText = result.content[0].text;
+    } finally {
+      clearTimeout(timeout);
+    }
+
+    // Extract hidden data blocks
+    const prefsMatch = responseText.match(/<!--PREFS:(.*?)-->/s);
+    const readyMatch = responseText.match(/<!--READY:(true|false)-->/);
+
+    let newPrefs = { ...collectedPrefs };
+    if (prefsMatch) {
+      try {
+        const extracted = JSON.parse(prefsMatch[1]);
+        // Merge — only overwrite with non-null values
+        for (const [k, v] of Object.entries(extracted)) {
+          if (v !== null && v !== undefined && v !== '') {
+            newPrefs[k] = v;
+          }
+        }
+      } catch {
+        // ignore parse errors
+      }
+    }
+
+    const readyToRun = readyMatch ? readyMatch[1] === 'true' : false;
+
+    // Strip hidden blocks from the reply shown to the user
+    const cleanReply = responseText
+      .replace(/<!--PREFS:.*?-->/gs, '')
+      .replace(/<!--READY:(true|false)-->/g, '')
+      .trim();
+
+    res.json({ reply: cleanReply, collectedPrefs: newPrefs, readyToRun });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ── POST /api/routes ──────────────────────────────────────────────────
-// Body: user preferences object (see user-preferences.example.json for schema)
-// Optional query param: ?region=ansel-adams (default: ansel-adams)
-// Returns immediately with { jobId, status: 'queued' }.
-// Poll GET /api/routes/:jobId for progress and results.
 app.post('/api/routes', (req, res) => {
   if (!API_KEY) {
     return res.status(500).json({
@@ -120,8 +250,20 @@ app.post('/api/routes', (req, res) => {
     });
   }
 
-  const regionName = req.query.region || 'ansel-adams';
-  const preferences = req.body;
+  // Region can come from body or query param; body takes precedence
+  const regionName = req.body.region || req.query.region || 'ansel-adams';
+  const preferences = { ...req.body };
+  delete preferences.region;
+
+  // Compute daysTarget from startDate + endDate if provided
+  if (preferences.startDate && preferences.endDate && !preferences.daysTarget) {
+    const start = new Date(preferences.startDate);
+    const end = new Date(preferences.endDate);
+    const diffMs = end - start;
+    if (diffMs > 0) {
+      preferences.daysTarget = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+    }
+  }
 
   const prefErrors = validatePreferences(preferences);
   if (prefErrors.length > 0) {
@@ -130,9 +272,7 @@ app.post('/api/routes', (req, res) => {
 
   const job = createJob();
 
-  // Fire-and-forget — do NOT await
   runPipeline(job.jobId, preferences, regionName).catch(err => {
-    // Catch any unexpected top-level error not already handled inside runPipeline
     updateJob(job.jobId, {
       status: 'failed',
       error: err.message || 'Unknown error',
@@ -154,27 +294,43 @@ app.get('/api/routes/:jobId', (req, res) => {
 // ── Background pipeline ───────────────────────────────────────────────
 async function runPipeline(jobId, preferences, regionName) {
   try {
-    // Step 0: Load region config
     updateJob(jobId, { status: 'running', step: 0, message: 'Loading region data…' });
+
+    // Find region by name or id
+    const regions = await loadAllRegions();
+    const regionMatch = regions.find(r =>
+      r.id === regionName ||
+      r.name.toLowerCase() === regionName.toLowerCase() ||
+      r.name.toLowerCase().includes(regionName.toLowerCase())
+    );
+
+    if (!regionMatch) {
+      const available = regions.filter(r => r.ready).map(r => r.name).join(', ');
+      throw new RegionConfigError(`Region "${regionName}" not found. Available regions: ${available}`);
+    }
+
+    if (!regionMatch.ready) {
+      throw new RegionConfigError(`Region "${regionMatch.name}" is coming soon — cluster data not yet available.`);
+    }
+
     let regionConfig;
     try {
       regionConfig = JSON.parse(
-        await fs.readFile(path.join(__dirname, 'regions', `${regionName}.json`), 'utf-8')
+        await fs.readFile(path.join(__dirname, 'regions', `${regionMatch.id}.json`), 'utf-8')
       );
     } catch (e) {
-      throw new RegionConfigError(`Region "${regionName}" not found.`);
+      throw new RegionConfigError(`Region config file not found for "${regionMatch.id}".`);
     }
 
-    // Step 1: Check cache
+    // Step 1: Check cache — support both <id>-clusters.json and legacy clusters.json
     updateJob(jobId, { step: 1, message: 'Loading trail clusters…' });
-    const clusterPath = existsSync(path.join(__dirname, 'cache', `${regionName}-clusters.json`))
-      ? path.join(__dirname, 'cache', `${regionName}-clusters.json`)
-      : path.join(__dirname, 'cache', 'clusters.json');
+    const clusterPath =
+      existsSync(path.join(__dirname, 'cache', `${regionMatch.id}-clusters.json`))
+        ? path.join(__dirname, 'cache', `${regionMatch.id}-clusters.json`)
+        : path.join(__dirname, 'cache', 'clusters.json');
 
     if (!existsSync(clusterPath)) {
-      throw new Error(
-        'Trail cluster cache not found. Run the full pipeline first: npm run fetch && npm run enrich && npm run loops'
-      );
+      throw new Error('Trail cluster cache not found. Run the full pipeline first.');
     }
 
     // Step 2: Rank clusters
@@ -215,7 +371,7 @@ async function runPipeline(jobId, preferences, regionName) {
           messages.push({ role: 'assistant', content: responseText });
           messages.push({
             role: 'user',
-            content: `Your response was not valid JSON. Output ONLY a JSON array with no markdown fences or explanation.`,
+            content: 'Your response was not valid JSON. Output ONLY a JSON array with no markdown fences or explanation.',
           });
           attempt++;
           continue;
@@ -230,7 +386,6 @@ async function runPipeline(jobId, preferences, regionName) {
       }
 
       validationResult = validateNarration(finalOutput, structuredInput, regionConfig);
-
       if (validationResult.ok) break;
 
       if (attempt <= MAX_RETRIES) {
@@ -246,10 +401,7 @@ async function runPipeline(jobId, preferences, regionName) {
       }
     }
 
-    // Step 5: Persist and mark done
-    updateJob(jobId, { step: 5, message: 'Validating output…' });
-
-    // Step 6: Fetch weather for each route (non-blocking — failures are tolerated)
+    // Step 5: Fetch weather
     updateJob(jobId, { step: 5, message: 'Fetching weather data…' });
     const weatherResults = await Promise.allSettled(
       finalOutput.map(route =>
@@ -287,8 +439,11 @@ async function runPipeline(jobId, preferences, regionName) {
 function validatePreferences(prefs) {
   const errors = [];
   if (!prefs || typeof prefs !== 'object') return ['Request body must be a JSON object'];
-  if (!prefs.daysTarget || prefs.daysTarget < 1 || prefs.daysTarget > 14) {
-    errors.push('daysTarget must be between 1 and 14');
+
+  // Accept either daysTarget directly, or compute from startDate + endDate
+  const days = prefs.daysTarget;
+  if (!days || days < 1 || days > 14) {
+    errors.push('daysTarget must be between 1 and 14 (or provide startDate + endDate)');
   }
   if (!prefs.milesPerDayTarget || prefs.milesPerDayTarget < 3 || prefs.milesPerDayTarget > 25) {
     errors.push('milesPerDayTarget must be between 3 and 25');
@@ -308,10 +463,7 @@ function validatePreferences(prefs) {
   return errors;
 }
 
-// ── Weather fetch (Open-Meteo — free, no API key) ─────────────────────
-// For dates within 16 days: real forecast.
-// For dates further out or no date: historical climate averages for that
-// calendar week using the Open-Meteo climate API.
+// ── Weather fetch ─────────────────────────────────────────────────────
 const WEATHER_TIMEOUT_MS = 10_000;
 
 async function fetchWeatherForRoute(geoCenter, startDate, daysTarget) {
@@ -330,7 +482,6 @@ async function fetchWeatherForRoute(geoCenter, startDate, daysTarget) {
 
     try {
       if (useForecast) {
-        // Real forecast from Open-Meteo
         const endDate = new Date(tripStart);
         endDate.setDate(endDate.getDate() + daysTarget - 1);
         const fmt = d => d.toISOString().split('T')[0];
@@ -342,11 +493,9 @@ async function fetchWeatherForRoute(geoCenter, startDate, daysTarget) {
         weatherData.source = 'forecast';
         weatherData.startDate = fmt(tripStart);
       } else {
-        // Historical climate normals — use the target week of year
         const refDate = tripStart || today;
         const month = String(refDate.getMonth() + 1).padStart(2, '0');
         const day = String(refDate.getDate()).padStart(2, '0');
-        // Open-Meteo climate API: 30-year normals
         const url = `https://climate-api.open-meteo.com/v1/climate?latitude=${lat}&longitude=${lon}&start_date=1991-${month}-${day}&end_date=2020-${month}-${day}&models=EC_Earth3P_HR&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&temperature_unit=fahrenheit&precipitation_unit=inch`;
         const res = await fetch(url, { signal: controller.signal });
         if (!res.ok) throw new Error(`Open-Meteo climate ${res.status}`);
@@ -361,7 +510,6 @@ async function fetchWeatherForRoute(geoCenter, startDate, daysTarget) {
 
     return weatherData;
   } catch (err) {
-    // Weather is non-critical — log and return null rather than failing the job
     console.warn(`Weather fetch failed for ${lat},${lon}: ${err.message}`);
     return null;
   }
@@ -393,16 +541,9 @@ function parseClimateResponse(json) {
   const avgHigh = tempHighs.length ? Math.round(tempHighs.reduce((a, b) => a + b, 0) / tempHighs.length) : null;
   const avgLow = tempLows.length ? Math.round(tempLows.reduce((a, b) => a + b, 0) / tempLows.length) : null;
   const avgPrecip = precips.length ? Number((precips.reduce((a, b) => a + b, 0) / precips.length).toFixed(2)) : null;
-  return {
-    avgHighF: avgHigh,
-    avgLowF: avgLow,
-    avgPrecipIn: avgPrecip,
-    elevation: json.elevation ?? null,
-    days: null,
-  };
+  return { avgHighF: avgHigh, avgLowF: avgLow, avgPrecipIn: avgPrecip, elevation: json.elevation ?? null, days: null };
 }
 
-// WMO Weather Interpretation Codes → human description
 function wmoDescription(code) {
   if (code === null || code === undefined) return null;
   if (code === 0) return 'Clear sky';
@@ -460,7 +601,6 @@ async function callClaude(messages, apiKey) {
   }
 }
 
-// ── JSON extraction ───────────────────────────────────────────────────
 function extractJSON(text) {
   try { return JSON.parse(text); } catch {}
   const match = text.match(/\[\s*\{[\s\S]*\}\s*\]/);

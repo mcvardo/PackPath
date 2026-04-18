@@ -1,0 +1,10 @@
+{
+  "name": "Rocky Mountain National Park",
+  "bbox": { "minLat": 40.10, "minLon": -105.90, "maxLat": 40.60, "maxLon": -105.40 },
+  "seedTrail": "Continental Divide Trail",
+  "allowedNonFeatures": [
+    "Rocky Mountain", "Continental Divide", "Front Range", "Estes Park",
+    "Grand Lake", "Longs Peak", "Trail Ridge", "Wild Basin",
+    "Glacier Gorge", "Kawuneeche Valley"
+  ]
+}

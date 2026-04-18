@@ -1,0 +1,10 @@
+{
+  "name": "Great Smoky Mountains National Park",
+  "bbox": { "minLat": 35.40, "minLon": -84.00, "maxLat": 35.80, "maxLon": -83.20 },
+  "seedTrail": "Appalachian Trail",
+  "allowedNonFeatures": [
+    "Great Smoky Mountains", "Appalachian Trail", "Tennessee", "North Carolina",
+    "Clingmans Dome", "Gatlinburg", "Cherokee", "Fontana Lake",
+    "Hazel Creek", "Deep Creek", "Alum Cave"
+  ]
+}

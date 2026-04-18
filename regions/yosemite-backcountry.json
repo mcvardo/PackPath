@@ -1,0 +1,10 @@
+{
+  "name": "Yosemite National Park Backcountry",
+  "bbox": { "minLat": 37.60, "minLon": -119.90, "maxLat": 38.20, "maxLon": -119.20 },
+  "seedTrail": "John Muir Trail",
+  "allowedNonFeatures": [
+    "Yosemite", "Sierra Nevada", "John Muir", "Pacific Crest Trail",
+    "Tuolumne Meadows", "Hetch Hetchy", "High Sierra Camp", "Yosemite Valley",
+    "Tioga Pass", "Cathedral Range"
+  ]
+}

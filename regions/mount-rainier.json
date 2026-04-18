@@ -1,0 +1,10 @@
+{
+  "name": "Mount Rainier National Park",
+  "bbox": { "minLat": 46.70, "minLon": -122.00, "maxLat": 47.00, "maxLon": -121.40 },
+  "seedTrail": "Wonderland Trail",
+  "allowedNonFeatures": [
+    "Mount Rainier", "Wonderland Trail", "Cascade Range", "Nisqually",
+    "Carbon River", "Paradise", "Sunrise", "Mowich Lake",
+    "White River", "Ohanapecosh"
+  ]
+}

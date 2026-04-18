@@ -1,0 +1,10 @@
+{
+  "name": "Wind River Range",
+  "bbox": { "minLat": 42.60, "minLon": -109.90, "maxLat": 43.40, "maxLon": -109.00 },
+  "seedTrail": "Continental Divide Trail",
+  "allowedNonFeatures": [
+    "Wind River", "Continental Divide", "Bridger Wilderness", "Popo Agie",
+    "Shoshone National Forest", "Fremont Trail", "Cirque of the Towers",
+    "Big Sandy", "Green River Lakes", "Elkhart Park"
+  ]
+}

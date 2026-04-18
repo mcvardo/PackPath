@@ -1,0 +1,10 @@
+{
+  "name": "Weminuche Wilderness",
+  "bbox": { "minLat": 37.40, "minLon": -107.80, "maxLat": 37.90, "maxLon": -107.00 },
+  "seedTrail": "Continental Divide Trail",
+  "allowedNonFeatures": [
+    "Weminuche", "Continental Divide", "San Juan Mountains",
+    "Rio Grande National Forest", "San Juan National Forest",
+    "Needle Mountains", "Chicago Basin", "Vallecito Creek", "Pine River"
+  ]
+}

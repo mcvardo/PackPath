@@ -1,0 +1,10 @@
+{
+  "name": "Maroon Bells-Snowmass Wilderness",
+  "bbox": { "minLat": 38.90, "minLon": -107.20, "maxLat": 39.20, "maxLon": -106.80 },
+  "seedTrail": "Four Pass Loop",
+  "allowedNonFeatures": [
+    "Maroon Bells", "Snowmass", "Elk Mountains", "Aspen",
+    "White River National Forest", "Four Pass Loop", "Maroon Lake",
+    "Crater Lake", "West Maroon", "East Maroon"
+  ]
+}

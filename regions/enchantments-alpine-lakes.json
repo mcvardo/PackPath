@@ -1,0 +1,10 @@
+{
+  "name": "Enchantments / Alpine Lakes Wilderness",
+  "bbox": { "minLat": 47.40, "minLon": -121.20, "maxLat": 47.70, "maxLon": -120.70 },
+  "seedTrail": "Pacific Crest Trail",
+  "allowedNonFeatures": [
+    "Enchantments", "Alpine Lakes", "Cascade Range", "Leavenworth",
+    "Wenatchee National Forest", "Stuart Range", "Snow Lakes",
+    "Colchuck Lake", "Aasgard Pass", "Core Enchantments"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "name": "Bob Marshall Wilderness",
+  "bbox": { "minLat": 47.20, "minLon": -113.50, "maxLat": 48.20, "maxLon": -112.80 },
+  "seedTrail": "Continental Divide Trail",
+  "allowedNonFeatures": [
+    "Bob Marshall", "Continental Divide", "Flathead National Forest",
+    "Lewis and Clark National Forest", "Chinese Wall", "South Fork Flathead",
+    "Sun River", "Spotted Bear", "Pentagon Wilderness"
+  ]
+}

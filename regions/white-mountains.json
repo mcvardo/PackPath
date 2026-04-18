@@ -1,0 +1,11 @@
+{
+  "name": "White Mountains",
+  "bbox": { "minLat": 44.00, "minLon": -71.80, "maxLat": 44.50, "maxLon": -71.10 },
+  "seedTrail": "Appalachian Trail",
+  "allowedNonFeatures": [
+    "White Mountains", "Appalachian Trail", "Presidential Range",
+    "Mount Washington", "AMC", "White Mountain National Forest",
+    "Franconia Ridge", "Pemigewasset Wilderness", "Crawford Notch",
+    "Tuckerman Ravine"
+  ]
+}

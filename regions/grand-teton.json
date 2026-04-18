@@ -1,0 +1,10 @@
+{
+  "name": "Grand Teton National Park",
+  "bbox": { "minLat": 43.50, "minLon": -110.90, "maxLat": 44.00, "maxLon": -110.40 },
+  "seedTrail": "Teton Crest Trail",
+  "allowedNonFeatures": [
+    "Grand Teton", "Teton Range", "Jackson Hole", "Snake River",
+    "Teton Crest Trail", "Bridger-Teton", "Jenny Lake", "String Lake",
+    "Death Canyon", "Cascade Canyon"
+  ]
+}

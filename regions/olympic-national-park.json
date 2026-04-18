@@ -1,0 +1,10 @@
+{
+  "name": "Olympic National Park",
+  "bbox": { "minLat": 47.50, "minLon": -124.70, "maxLat": 48.10, "maxLon": -123.40 },
+  "seedTrail": "Hoh River Trail",
+  "allowedNonFeatures": [
+    "Olympic", "Hoh Rainforest", "Pacific Ocean", "Strait of Juan de Fuca",
+    "Hood Canal", "Olympic Peninsula", "Hurricane Ridge", "Sol Duc",
+    "Quinault", "Dosewallips"
+  ]
+}
