@@ -50,6 +50,10 @@ export default function App() {
     return all.size;
   }, [routes]);
 
+  const regionId = collectedPrefs?.location
+    ? collectedPrefs.location.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+    : null;
+  const startDate = collectedPrefs?.startDate || null;
   const regionLabel = collectedPrefs?.location || null;
 
   return (
@@ -98,6 +102,8 @@ export default function App() {
           <RouteDetail
             route={selectedRoute}
             onBack={() => setSelectedRoute(null)}
+            regionId={regionId}
+            startDate={startDate}
           />
         </div>
       )}
@@ -210,7 +216,7 @@ export default function App() {
 
           {/* ── Route cards ── */}
           {routes?.map((route, i) => (
-            <RouteCard key={i} route={route} onClick={() => setSelectedRoute(route)} />
+            <RouteCard key={i} route={route} onClick={() => setSelectedRoute(route)} regionId={regionId} startDate={startDate} />
           ))}
         </>
       )}

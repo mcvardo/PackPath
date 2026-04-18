@@ -3,13 +3,16 @@ import { COLORS } from '../styles/tokens.js';
 import { fmt, fmtMi } from '../utils/hiking.js';
 import { ArchetypeTag } from './ArchetypeTag.jsx';
 import { StatBlock } from './StatBlock.jsx';
+import { PermitBadge } from './PermitBadge.jsx';
+import { usePermit } from '../hooks/usePermit.js';
 
 /**
  * Route summary card shown in the picker view.
  * Clicking opens the full route detail.
  */
-export function RouteCard({ route, onClick }) {
+export function RouteCard({ route, onClick, regionId, startDate }) {
   const [hover, setHover] = useState(false);
+  const { permit } = usePermit(regionId, startDate);
 
   return (
     <button
@@ -55,6 +58,8 @@ export function RouteCard({ route, onClick }) {
       <p style={{ fontSize: 14, color: COLORS.stone500, margin: 0, lineHeight: 1.5 }}>
         {route.bestFor}
       </p>
+
+      <PermitBadge permit={permit} size="sm" />
 
       <div style={{
         marginTop: 12,

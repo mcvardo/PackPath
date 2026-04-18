@@ -107,6 +107,19 @@ async function loadAllRegions() {
   return regions.sort((a, b) => a.name.localeCompare(b.name));
 }
 
+// ── Load permit registry ──────────────────────────────────────────────
+let permitRegistry = null;
+async function loadPermitRegistry() {
+  if (permitRegistry) return permitRegistry;
+  try {
+    const raw = await fs.readFile(path.join(__dirname, 'regions', 'permit-registry.json'), 'utf-8');
+    permitRegistry = JSON.parse(raw).regions;
+  } catch {
+    permitRegistry = {};
+  }
+  return permitRegistry;
+}
+
 // ── GET /api/regions ──────────────────────────────────────────────────
 app.get('/api/regions', async (req, res) => {
   try {
@@ -115,6 +128,88 @@ app.get('/api/regions', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+
+// ── GET /api/permits/:regionId ────────────────────────────────────────
+// Returns permit info + live availability from recreation.gov for a region.
+// Query params: startDate (YYYY-MM-DD), endDate (YYYY-MM-DD)
+app.get('/api/permits/:regionId', async (req, res) => {
+  const { regionId } = req.params;
+  const { startDate } = req.query;
+
+  const registry = await loadPermitRegistry();
+  const info = registry[regionId];
+
+  if (!info) {
+    return res.json({ permitRequired: false, available: null, info: null });
+  }
+
+  const result = {
+    permitRequired: info.permitRequired,
+    permitName: info.permitName,
+    permitId: info.permitId,
+    bookingUrl: info.bookingUrl,
+    isLottery: info.isLottery,
+    lotteryWindow: info.lotteryWindow || null,
+    quotaSeason: info.quotaSeason || null,
+    notes: info.notes,
+    bestMonths: info.bestMonths,
+    snowfreeTypically: info.snowfreeTypically,
+    available: null,
+    availabilityChecked: false,
+  };
+
+  // Try to fetch live availability if we have a permit ID and a start date
+  if (info.permitId && startDate && info.permitRequired) {
+    try {
+      const date = new Date(startDate);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const startOfMonth = `${year}-${month}-01`;
+      const endOfMonth = new Date(year, date.getMonth() + 1, 0);
+      const endStr = `${year}-${month}-${String(endOfMonth.getDate()).padStart(2, '0')}`;
+
+      const url = `https://www.recreation.gov/api/permitinyo/${info.permitId}/availabilityv2?start_date=${startOfMonth}&end_date=${endStr}&commercial_acct=false`;
+
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 8_000);
+
+      try {
+        const response = await fetch(url, {
+          headers: { 'User-Agent': 'PackPath/1.0 (trip planning app)' },
+          signal: controller.signal,
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          // Count available dates in the user's window
+          const availability = data.payload || data;
+          let availableCount = 0;
+          let totalChecked = 0;
+
+          if (availability && typeof availability === 'object') {
+            for (const [dateStr, status] of Object.entries(availability)) {
+              const d = new Date(dateStr);
+              if (d >= date) {
+                totalChecked++;
+                if (status === 'Available' || status === 'AVAILABLE') availableCount++;
+              }
+            }
+          }
+
+          result.available = availableCount > 0;
+          result.availableCount = availableCount;
+          result.availabilityChecked = true;
+        }
+      } finally {
+        clearTimeout(timeout);
+      }
+    } catch {
+      // Availability check failed — non-critical, just skip it
+    }
+  }
+
+  res.json(result);
 });
 
 // ── POST /api/chat ────────────────────────────────────────────────────

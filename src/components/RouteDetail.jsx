@@ -5,12 +5,15 @@ import { StatBlock } from './StatBlock.jsx';
 import { DayCard } from './DayCard.jsx';
 import { MapView } from './MapView.jsx';
 import { WeatherPanel } from './WeatherPanel.jsx';
+import { PermitBadge } from './PermitBadge.jsx';
+import { usePermit } from '../hooks/usePermit.js';
 
 /**
  * Full route detail view.
- * Structure: back link → dark header → day cards → pros/cons → gear tips → export.
+ * Structure: back link → dark header → permit panel → day cards → pros/cons → gear tips → export.
  */
-export function RouteDetail({ route, onBack }) {
+export function RouteDetail({ route, onBack, regionId, startDate }) {
+  const { permit } = usePermit(regionId, startDate);
   return (
     <div>
       {/* Back link */}
@@ -58,6 +61,22 @@ export function RouteDetail({ route, onBack }) {
 
       {/* Map + export actions */}
       <MapView route={route} />
+
+      {/* Permit status */}
+      {permit && (
+        <div style={{
+          background: '#fff',
+          border: `1px solid ${COLORS.stone200}`,
+          borderRadius: 10,
+          padding: 16,
+          marginBottom: 16,
+        }}>
+          <h4 style={{ fontSize: 13, fontWeight: 700, color: COLORS.stone600, margin: '0 0 4px 0', textTransform: 'uppercase', letterSpacing: 0.5 }}>
+            Permits & Planning
+          </h4>
+          <PermitBadge permit={permit} size="lg" />
+        </div>
+      )}
 
       {/* Weather */}
       {route.weather && <WeatherPanel weather={route.weather} />}

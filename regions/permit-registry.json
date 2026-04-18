@@ -1,0 +1,230 @@
+{
+  "regions": {
+    "ansel-adams": {
+      "permitRequired": true,
+      "permitName": "Inyo National Forest Wilderness Permit",
+      "permitId": "233262",
+      "bookingUrl": "https://www.recreation.gov/permits/233262",
+      "isLottery": false,
+      "quotaSeason": { "start": "06-15", "end": "10-15" },
+      "notes": "Quota season permits required Jun 15–Oct 15. Walk-up permits available at ranger stations.",
+      "bestMonths": ["Jul", "Aug", "Sep"],
+      "snowfreeTypically": "July"
+    },
+    "john-muir-wilderness": {
+      "permitRequired": true,
+      "permitName": "Inyo National Forest Wilderness Permit",
+      "permitId": "233262",
+      "bookingUrl": "https://www.recreation.gov/permits/233262",
+      "isLottery": false,
+      "quotaSeason": { "start": "06-15", "end": "10-15" },
+      "notes": "Same permit system as Ansel Adams. High demand for popular trailheads like Bishop Pass and Kearsarge.",
+      "bestMonths": ["Jul", "Aug", "Sep"],
+      "snowfreeTypically": "July"
+    },
+    "yosemite-backcountry": {
+      "permitRequired": true,
+      "permitName": "Yosemite Wilderness Permit",
+      "permitId": "445858",
+      "bookingUrl": "https://www.recreation.gov/permits/445858",
+      "isLottery": false,
+      "quotaSeason": { "start": "05-01", "end": "11-01" },
+      "notes": "Trailhead quotas apply. 60% reservable in advance, 40% walk-up day-of.",
+      "bestMonths": ["Jul", "Aug", "Sep"],
+      "snowfreeTypically": "July"
+    },
+    "glacier-national-park": {
+      "permitRequired": true,
+      "permitName": "Glacier National Park Wilderness Permit",
+      "permitId": "4675321",
+      "bookingUrl": "https://www.recreation.gov/permits/4675321",
+      "isLottery": true,
+      "lotteryWindow": { "open": "03-01", "close": "03-31" },
+      "quotaSeason": { "start": "06-15", "end": "09-30" },
+      "notes": "Early access lottery in March. Remaining permits available via recreation.gov starting mid-April.",
+      "bestMonths": ["Jul", "Aug", "Sep"],
+      "snowfreeTypically": "July"
+    },
+    "olympic-national-park": {
+      "permitRequired": true,
+      "permitName": "Olympic National Park Wilderness Permit",
+      "permitId": null,
+      "bookingUrl": "https://www.nps.gov/olym/planyourvisit/wilderness-permit.htm",
+      "isLottery": false,
+      "quotaSeason": { "start": "05-01", "end": "09-30" },
+      "notes": "Self-issue permits at trailheads for most areas. Some popular corridors have quotas.",
+      "bestMonths": ["Jul", "Aug"],
+      "snowfreeTypically": "July"
+    },
+    "north-cascades": {
+      "permitRequired": true,
+      "permitName": "North Cascades Backcountry Permit",
+      "permitId": "4675322",
+      "bookingUrl": "https://www.recreation.gov/permits/4675322",
+      "isLottery": false,
+      "quotaSeason": { "start": "05-01", "end": "10-31" },
+      "notes": "Permit required year-round for overnight stays.",
+      "bestMonths": ["Jul", "Aug", "Sep"],
+      "snowfreeTypically": "July"
+    },
+    "rocky-mountain-np": {
+      "permitRequired": true,
+      "permitName": "Rocky Mountain NP Backcountry Permit",
+      "permitId": null,
+      "bookingUrl": "https://www.nps.gov/romo/planyourvisit/backcountry-camping.htm",
+      "isLottery": false,
+      "quotaSeason": { "start": "05-01", "end": "10-31" },
+      "notes": "Reservations open in March. Walk-up permits available at visitor centers.",
+      "bestMonths": ["Jul", "Aug", "Sep"],
+      "snowfreeTypically": "July"
+    },
+    "maroon-bells-snowmass": {
+      "permitRequired": false,
+      "permitName": null,
+      "permitId": null,
+      "bookingUrl": null,
+      "isLottery": false,
+      "notes": "No overnight permit required. Campfire restrictions apply above treeline.",
+      "bestMonths": ["Jul", "Aug", "Sep"],
+      "snowfreeTypically": "July"
+    },
+    "grand-teton": {
+      "permitRequired": true,
+      "permitName": "Grand Teton Backcountry Permit",
+      "permitId": "249986",
+      "bookingUrl": "https://www.recreation.gov/permits/249986",
+      "isLottery": false,
+      "quotaSeason": { "start": "05-15", "end": "10-15" },
+      "notes": "Reservations open January 5. Teton Crest Trail sites book out fast.",
+      "bestMonths": ["Jul", "Aug", "Sep"],
+      "snowfreeTypically": "July"
+    },
+    "wind-river-range": {
+      "permitRequired": false,
+      "permitName": null,
+      "permitId": null,
+      "bookingUrl": null,
+      "isLottery": false,
+      "notes": "No permit required for most of the Wind River Range. Self-registration at some trailheads.",
+      "bestMonths": ["Jul", "Aug", "Sep"],
+      "snowfreeTypically": "July"
+    },
+    "zion-backcountry": {
+      "permitRequired": true,
+      "permitName": "Zion Backcountry Permit",
+      "permitId": null,
+      "bookingUrl": "https://www.nps.gov/zion/planyourvisit/backcountry-permits.htm",
+      "isLottery": true,
+      "lotteryWindow": { "open": "03-01", "close": "03-31" },
+      "notes": "Lottery for Narrows and Subway. Other areas first-come first-served.",
+      "bestMonths": ["Mar", "Apr", "May", "Oct", "Nov"],
+      "snowfreeTypically": "March"
+    },
+    "bryce-canyon": {
+      "permitRequired": false,
+      "permitName": null,
+      "permitId": null,
+      "bookingUrl": null,
+      "isLottery": false,
+      "notes": "No overnight permit required for Under-the-Rim Trail. Camping at designated sites only.",
+      "bestMonths": ["May", "Jun", "Sep", "Oct"],
+      "snowfreeTypically": "May"
+    },
+    "grand-canyon-backcountry": {
+      "permitRequired": true,
+      "permitName": "Grand Canyon Backcountry Permit",
+      "permitId": "4675337",
+      "bookingUrl": "https://www.recreation.gov/permits/4675337",
+      "isLottery": false,
+      "quotaSeason": { "start": "01-01", "end": "12-31" },
+      "notes": "Permit required year-round. Apply 4 months in advance. Extremely competitive.",
+      "bestMonths": ["Mar", "Apr", "Oct", "Nov"],
+      "snowfreeTypically": "Year-round (avoid summer heat)"
+    },
+    "mount-rainier": {
+      "permitRequired": true,
+      "permitName": "Mount Rainier Wilderness Permit",
+      "permitId": "4675317",
+      "bookingUrl": "https://www.recreation.gov/permits/4675317",
+      "isLottery": false,
+      "quotaSeason": { "start": "07-01", "end": "09-30" },
+      "notes": "Wonderland Trail permits highly competitive. Apply in March.",
+      "bestMonths": ["Jul", "Aug", "Sep"],
+      "snowfreeTypically": "July"
+    },
+    "enchantments-alpine-lakes": {
+      "permitRequired": true,
+      "permitName": "Enchantment Permit Area",
+      "permitId": "233273",
+      "bookingUrl": "https://www.recreation.gov/permits/233273",
+      "isLottery": true,
+      "lotteryWindow": { "open": "02-01", "close": "02-28" },
+      "quotaSeason": { "start": "05-15", "end": "10-31" },
+      "notes": "One of the most competitive permits in the US. Spring lottery essential. Daily lottery also available.",
+      "bestMonths": ["Aug", "Sep"],
+      "snowfreeTypically": "August"
+    },
+    "bob-marshall-wilderness": {
+      "permitRequired": false,
+      "permitName": null,
+      "permitId": null,
+      "bookingUrl": null,
+      "isLottery": false,
+      "notes": "No permit required. Self-registration at trailheads.",
+      "bestMonths": ["Jul", "Aug", "Sep"],
+      "snowfreeTypically": "July"
+    },
+    "desolation-wilderness": {
+      "permitRequired": true,
+      "permitName": "Desolation Wilderness Permit",
+      "permitId": null,
+      "bookingUrl": "https://www.fs.usda.gov/detail/eldorado/passes-permits/recreation/?cid=stelprdb5357223",
+      "isLottery": false,
+      "quotaSeason": { "start": "06-15", "end": "09-15" },
+      "notes": "Quota season Jun 15–Sep 15. Self-issue outside quota season.",
+      "bestMonths": ["Jul", "Aug", "Sep"],
+      "snowfreeTypically": "July"
+    },
+    "weminuche-wilderness": {
+      "permitRequired": false,
+      "permitName": null,
+      "permitId": null,
+      "bookingUrl": null,
+      "isLottery": false,
+      "notes": "No permit required. Campfire restrictions above treeline.",
+      "bestMonths": ["Jul", "Aug", "Sep"],
+      "snowfreeTypically": "July"
+    },
+    "adirondack-high-peaks": {
+      "permitRequired": false,
+      "permitName": null,
+      "permitId": null,
+      "bookingUrl": null,
+      "isLottery": false,
+      "notes": "No permit required. Camping regulations apply — 150ft from water, trails, roads.",
+      "bestMonths": ["Jun", "Jul", "Aug", "Sep"],
+      "snowfreeTypically": "June"
+    },
+    "white-mountains": {
+      "permitRequired": false,
+      "permitName": null,
+      "permitId": null,
+      "bookingUrl": null,
+      "isLottery": false,
+      "notes": "No permit required. AMC hut reservations recommended for popular routes.",
+      "bestMonths": ["Jun", "Jul", "Aug", "Sep"],
+      "snowfreeTypically": "June"
+    },
+    "great-smoky-mountains": {
+      "permitRequired": true,
+      "permitName": "Great Smoky Mountains Backcountry Permit",
+      "permitId": null,
+      "bookingUrl": "https://smokiespermits.nps.gov",
+      "isLottery": false,
+      "quotaSeason": { "start": "01-01", "end": "12-31" },
+      "notes": "Permit required year-round. Reserve at smokiespermits.nps.gov. $4/night fee.",
+      "bestMonths": ["Apr", "May", "Oct", "Nov"],
+      "snowfreeTypically": "April"
+    }
+  }
+}
