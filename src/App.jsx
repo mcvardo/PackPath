@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { COLORS, FONT_FAMILY } from './styles/tokens.js';
+import { COLORS, FONT_FAMILY, LOGO_SRC } from './styles/tokens.js';
 import { useRoutes } from './hooks/useRoutes.js';
 import { useChat } from './hooks/useChat.js';
 import { useSavedTrips } from './hooks/useSavedTrips.js';
@@ -98,22 +98,26 @@ export default function App() {
       minHeight: '100vh',
     }}>
 
-      {/* ── Header ── */}
-      <div style={{ textAlign: 'center', marginBottom: 24, paddingTop: 8 }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, marginBottom: 4 }}>
-          <span style={{ fontSize: 28 }}>⛰</span>
-          <h1 style={{
-            fontSize: 26,
-            fontWeight: 800,
-            margin: 0,
-            color: COLORS.stone800,
-            letterSpacing: -0.5,
-          }}>
-            PackPath
+      {/* ── Hero ── */}
+      <div style={{ textAlign: 'center', marginBottom: 20, paddingTop: 16 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, marginBottom: 16 }}>
+          <img src={LOGO_SRC} alt="PackPath" style={{ width: 56, height: 'auto', objectFit: 'contain' }} />
+          <h1 style={{ fontSize: 28, fontWeight: 800, margin: 0, letterSpacing: -0.5, lineHeight: 1.1 }}>
+            <span style={{ color: '#047857' }}>Pack</span>
+            <span style={{ color: COLORS.stone900 }}>Path</span>
           </h1>
         </div>
-        <p style={{ fontSize: 14, color: COLORS.stone500, margin: '4px 0 0 0' }}>
-          Real trails. AI-planned routes. No made-up miles.
+        <p style={{
+          fontSize: 20, fontWeight: 700, color: COLORS.stone800,
+          margin: '0 0 8px 0', lineHeight: 1.35, letterSpacing: -0.3,
+        }}>
+          Stop spending hours stitching together trip reports, topo maps, and guesswork.
+        </p>
+        <p style={{ fontSize: 15, color: COLORS.stone500, margin: '0 0 16px 0', lineHeight: 1.6 }}>
+          <span style={{ color: '#047857', fontWeight: 600 }}>Pack</span>
+          <span style={{ color: COLORS.stone900, fontWeight: 600 }}>Path</span> uses
+          a proprietary routing algorithm built on real trail geometry, verified water sources,
+          and elevation data to generate optimized multi-day itineraries in seconds.
         </p>
         {regionLabel && (
           <p style={{ fontSize: 13, color: COLORS.emerald700, margin: '6px 0 0 0', fontWeight: 600 }}>
@@ -126,6 +130,8 @@ export default function App() {
           </p>
         )}
       </div>
+
+      <div style={{ height: 1, background: COLORS.stone200, marginBottom: 24 }} />
 
       {/* ── Route Detail overlay ── */}
       {selectedRoute && (
