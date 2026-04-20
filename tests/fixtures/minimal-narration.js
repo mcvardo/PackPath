@@ -119,7 +119,7 @@ export const minimalValidNarration = [
         miles: 10.0,
         gainFt: 1500,
         lossFt: 2000,
-        note: 'Return via the Shadow Lake Trail, descending past Shadow Lake and following Shadow Creek back to the trailhead. The descent offers views back toward the Ritter Range before the final miles through forest.',
+        note: 'Return via the Shadow Lake Trail, descending past Shadow Lake and following Shadow Creek back to the trailhead. The descent winds through granite basins before the final miles through forest to the parking area.',
         features: {
           peaks: [],
           passes: [],
