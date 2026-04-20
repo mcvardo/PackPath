@@ -39,6 +39,7 @@ const API_URL = 'https://api.anthropic.com/v1/messages';
 const MAX_RETRIES = 2;
 const CLAUDE_TIMEOUT_MS = 120_000;
 const JOB_TTL_MS = 60 * 60 * 1000;
+const WEATHER_TZ = process.env.WEATHER_TIMEZONE || 'auto';
 
 // ── Sentry ────────────────────────────────────────────────────────────
 if (SENTRY_DSN) {
@@ -125,7 +126,7 @@ const allowedOrigins = process.env.NODE_ENV === 'production'
   : true;
 
 app.use(cors({ origin: allowedOrigins }));
-app.use(express.json());
+app.use(express.json({ limit: '1mb' }));
 app.use(requestLogger);
 
 // ── Rate limiting ─────────────────────────────────────────────────────
@@ -139,7 +140,7 @@ const chatLimiter = rateLimit({
   skip: () => process.env.NODE_ENV !== 'production',
 });
 
-// Route generation: 10 searches per hour per IP (each costs ~$0.08)
+// Route generation: 50 searches per hour per IP (each costs ~$0.08)
 const routesLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
   max: 50,
@@ -156,7 +157,7 @@ const apiLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Too many requests. Please slow down.' },
-  skip: () => process.env.NODE_ENV !== 'production',
+  skip: () => process.env.NODE_ENW !== 'production',
 });
 
 app.use('/api/', apiLimiter);
@@ -791,7 +792,8 @@ async function fetchWeatherForRoute(geoCenter, startDate, daysTarget) {
         const endDate = new Date(tripStart);
         endDate.setDate(endDate.getDate() + daysTarget - 1);
         const fmt = d => d.toISOString().split('T')[0];
-        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,weathercode,windspeed_10m_max&temperature_unit=fahrenheit&windspeed_unit=mph&precipitation_unit=inch&start_date=${fmt(tripStart)}&end_date=${fmt(endDate)}&timezone=America%2FLos_Angeles`;
+        const tz = encodeURIComponent(WEATHER_TZ);
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,weathercode,windspeed_10m_max&temperature_unit=fahrenheit&windspeed_unit=mph&precipitation_unit=inch&start_date=${fmt(tripStart)}&end_date=${fmt(endDate)}&timezone=${tz}`;
         const res = await fetch(url, { signal: controller.signal });
         if (!res.ok) throw new Error(`Open-Meteo forecast ${res.status}`);
         const json = await res.json();
