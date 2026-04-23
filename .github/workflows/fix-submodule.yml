@@ -1,0 +1,40 @@
+name: Remove broken submodule
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/fix-submodule.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+          fetch-depth: 0
+
+      - name: Remove gitlink and cleanup
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Remove the broken submodule gitlink
+          git rm --cached PackPath || true
+          
+          # Remove .gitmodules if it exists
+          rm -f .gitmodules
+          git rm --cached .gitmodules 2>/dev/null || true
+          
+          # Remove this workflow file too (self-cleanup)
+          git rm .github/workflows/fix-submodule.yml
+          
+          # Remove .github dir if empty
+          rmdir .github/workflows 2>/dev/null || true
+          rmdir .github 2>/dev/null || true
+          
+          git commit -m "fix: remove broken PackPath submodule gitlink"
+          git push origin main
